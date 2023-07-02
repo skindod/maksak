@@ -6,30 +6,31 @@
 
     <!-- begin::Body -->
     <body class="kt-page--fixed kt-page-content-white kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header-mobile--fixed kt-subheader--enabled kt-subheader--transparent kt-page--loading">
-
+    <?php if($public_mode != true){ ?>
 	<!-- begin:: Page -->
 	<?php include "template/header-mobile.php"; ?>
-
+    <?php } ?>
         <div class="kt-grid kt-grid--hor kt-grid--root">
             <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver kt-page">
 		<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor kt-wrapper " id="kt_wrapper">
-					
+		<?php if($public_mode != true){ ?>			
 		<?php include "template/header-desktop.php"; ?>
-					
+        <?php } ?>		
                     <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver kt-grid--stretch">
 			<div class="kt-container kt-body  kt-grid kt-grid--ver" id="kt_body">
                             <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
 
 				<!-- begin:: Content Head -->
 				<div class="kt-subheader   kt-grid__item" id="kt_subheader">
-                                    <div class="kt-subheader__main">
-                                        <h3 class="kt-subheader__title" style="width: 400px;">Papan Keputusan</h3>
-                                    </div>
-                                    <div class="kt-subheader__toolbar">
-                                        <div class="kt-subheader__wrapper">
-                                            <span class="kt-subheader__desc"><i class="flaticon2-calendar-1"></i> <?php echo date('M j'); ?></span>
-					</div>
-                                    </div>
+                    <div class="kt-subheader__main">
+                        <h3 class="kt-subheader__title" style="width: 400px;">Papan Keputusan</h3>
+                    </div>
+                    <div class="kt-subheader__toolbar">
+                        <div class="kt-subheader__wrapper">
+                            <button class="btn btn-success btn-sm" onclick="copyLink()"><i class="flaticon-paper-plane-1"></i>&nbsp;Kongsi pautan umum</button>
+                            <input type="hidden" id="urlLink" value="<?php echo base_url().ltrim($_SERVER['REQUEST_URI'], '/'); ?>">
+					    </div>
+                    </div>
 				</div>
                                 <!-- end:: Content Head -->
 
@@ -67,6 +68,7 @@
                                     
                                     <!--Begin::Section-->
                                     <div class="row">
+                                    <?php if($public_mode != true){ ?>
 					<div class="col-xl-4">
                                             <?php 
                                                 $attributes = array("id" => "kt_form", "name" => "kt_form", "class" => "kt-form");
@@ -102,8 +104,8 @@
                                                             <div class="form-group">
                                                                 <label>Pilih badan gabungan</label>
                                                                 <select class="form-control selectpicker" name="state[]">
-                                                                    <?php foreach($state_list as $state){ ?>
-                                                                        <option value="<?php echo $state->id; ?>" <?php if(isset($search_details[0])){ if($search_details[0]->sport_id == $sport->sport_id){ echo 'selected'; } } ?>>MAKSAK <?php echo $state->name; ?></option>
+                                                                    <?php foreach($badan_gabungan_list as $bg){ ?>
+                                                                        <option value="<?php echo $bg->id; ?>" <?php if(isset($search_details[0])){ if($search_details[0]->state_id == $bg->id){ echo 'selected'; } } ?>><?php echo $bg->name; ?></option>
                                                                     <?php } ?>
                                                                 </select>
                                                             </div>
@@ -113,19 +115,19 @@
                                                                 <label>Pilih status keputusan</label>
                                                                 <select class="form-control selectpicker" name="point[]">
                                                                     <?php foreach($points_list as $point){ ?>
-                                                                        <option value="<?php echo $point->id; ?>" <?php if(isset($search_details[0])){ if($search_details[0]->point_id == $point->id){ echo 'selected'; } } ?>><?php echo $point->name.' (+'.$point->point.'pt)'; ?></option>
+                                                                        <option value="<?php echo $point->id; ?>" <?php if(isset($search_details[0])){ if($search_details[0]->point_id == $point->id){ echo 'selected'; } } ?>><?php echo $point->name.' ('.$point->point.'pt)'; ?></option>
                                                                     <?php } ?>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <?php for($num = 1; $num < 16; $num++){ ?>
+                                                    <?php for($num = 1; $num < 18; $num++){ ?>
                                                         <div class="row" style="margin-top: -15px;">
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
                                                                     <select class="form-control selectpicker" name="state[]">
-                                                                        <?php foreach($state_list as $state){ ?>
-                                                                            <option value="<?php echo $state->id; ?>" <?php if(isset($search_details[$num])){ if($search_details[$num]->state_id == $state->id){ echo 'selected'; } } ?>>MAKSAK <?php echo $state->name; ?></option>
+                                                                        <?php foreach($badan_gabungan_list as $bg){ ?>
+                                                                            <option value="<?php echo $bg->id; ?>" <?php if(isset($search_details[$num])){ if($search_details[$num]->state_id == $bg->id){ echo 'selected'; } } ?>><?php echo $bg->name; ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -134,7 +136,7 @@
                                                                 <div class="form-group">
                                                                     <select class="form-control selectpicker" name="point[]">
                                                                         <?php foreach($points_list as $point){ ?>
-                                                                            <option value="<?php echo $point->id; ?>" <?php if(isset($search_details[$num])){ if($search_details[$num]->point_id == $point->id){ echo 'selected'; } } ?>><?php echo $point->name.' (+'.$point->point.'pt)'; ?></option>
+                                                                            <option value="<?php echo $point->id; ?>" <?php if(isset($search_details[$num])){ if($search_details[$num]->point_id == $point->id){ echo 'selected'; } } ?>><?php echo $point->name.' ('.$point->point.'pt)'; ?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
@@ -153,7 +155,8 @@
                                             <!--end:: Widgets/status-->
                                             <?php echo form_close(); ?>
 					</div>
-                                        <div class="col-xl-8">
+<?php } ?>
+                                        <div class="col-xl-<?php if($public_mode != true){ echo '8';}else{ echo '12';}?>">
                                             
                                             <div class="kt-portlet">
                                                 <div class="kt-portlet__head">
@@ -191,7 +194,7 @@
                                                                                     <tr>
                                                                                         <td></td>
                                                                                         <td class="podium-winner">
-                                                                                            <?php echo 'MAKSAK '.$sport->result[0]->name; ?>
+                                                                                            <?php echo $sport->result[0]->name; ?>
                                                                                         </td>
                                                                                         <td></td>
                                                                                     </tr>
@@ -202,14 +205,14 @@
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td class="podium-winner">
-                                                                                            <?php echo 'MAKSAK '.$sport->result[1]->name; ?>
+                                                                                            <?php echo $sport->result[1]->name; ?>
                                                                                         </td>
                                                                                         <td></td>
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td class="podium-2 podium-border-bottom" rowspan="2">2</td>
                                                                                         <td class="podium-winner">
-                                                                                            <?php echo 'MAKSAK '.$sport->result[2]->name; ?>
+                                                                                            <?php echo $sport->result[2]->name; ?>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
@@ -226,7 +229,7 @@
                                                                                                     <?php $num = 1; foreach($sport->result as $res){ ?>
                                                                                                     <tr>
                                                                                                         <th scope="row"><?php echo $num; ?></th>
-                                                                                                        <td>MAKSAK <?php echo $res->name; ?></td>
+                                                                                                        <td><?php echo $res->name; ?></td>
                                                                                                     </tr>
                                                                                                     <?php $num++; } ?>
                                                                                                 </tbody>
@@ -424,7 +427,17 @@
                         });
                     });
                 </script>
-                
+                <script>
+                    function copyLink() {
+                        var inputc = document.body.appendChild(document.createElement("input"));
+                        inputc.value = window.location.href;
+                        inputc.focus();
+                        inputc.select();
+                        document.execCommand('copy');
+                        inputc.parentNode.removeChild(inputc);
+                        alert("Pautan telah disalin.");
+                    }
+                </script>
                 
 
 <?php include "template/footer.php"; ?>

@@ -11,6 +11,7 @@ class events_model extends CI_Model {
         $this->load->database();
         $this->load->library(array('session'));
         $this->db = $this->load->database('default', TRUE);
+        $this->load->model('logs_model');
     }
 
     public function insert($name, $email, $state, $phone) {
@@ -54,8 +55,8 @@ class events_model extends CI_Model {
                     $filename = date("Ymdhis") . '_' . $name;
 
                     $config['upload_path'] = './images/events';
-                    $config['allowed_types'] = 'jpg|png';
-                    $config['max_size'] = 2000;
+                    $config['allowed_types'] = 'jpg|png|heic|heif|jpeg|JPG|PNG|JPEG';
+                    $config['max_size'] = 4000;
                     $config['file_name'] = $filename;
 
                     $this->load->library('upload', $config);
@@ -66,8 +67,6 @@ class events_model extends CI_Model {
                             'msg' => $this->upload->display_errors()
                         );
                         $this->session->set_userdata($session);
-
-                        redirect(base_url('events/create'));
                     }
                 }
             }
@@ -93,7 +92,7 @@ class events_model extends CI_Model {
         $filename = '';
         if (isset($_FILES['event_file'])) {
             $check = $_FILES['event_file']['name'];
-
+            // echo '<pre>'; print_r($check); die();
 
             if ($check != '') {
                 // Loop through each file
@@ -103,8 +102,8 @@ class events_model extends CI_Model {
                     $filename = date("Ymdhis") . '_' . $name;
 
                     $config['upload_path'] = './images/events';
-                    $config['allowed_types'] = 'jpg|png';
-                    $config['max_size'] = 2000;
+                    $config['allowed_types'] = 'jpg|png|heic|heif|jpeg|JPG|PNG|JPEG';
+                    $config['max_size'] = 4000;
                     $config['file_name'] = $filename;
 
                     $this->load->library('upload', $config);
@@ -115,8 +114,6 @@ class events_model extends CI_Model {
                             'msg' => $this->upload->display_errors()
                         );
                         $this->session->set_userdata($session);
-
-                        redirect(base_url('events/create'));
                     } else {
                         $this->db->set('image', $filename);
                     }
@@ -140,12 +137,7 @@ class events_model extends CI_Model {
         
         $last_registration_date = date("Y-m-d", strtotime($last_registration_date));
         
-//        $this->db->set('name', $event_name);
-//        $this->db->set('description', $event_description);
-//        $this->db->set('modified_by', $_SESSION['userid']);
-//        $this->db->set('modified_date', date('Y-m-d H:i:s'));
-//        $this->db->where('id', $id);
-//        $this->db->update('sports');
+
         
         $data = array(
             'event_id' => $event_id,
@@ -171,7 +163,7 @@ class events_model extends CI_Model {
         $date_arr = explode("/", $location_date_range);
         
         $last_registration_date1 = date("Y-m-d", strtotime($last_registration_date));
-//        echo $last_registration_date; die();
+
         $this->db->set('location_name', $location_name);
         $this->db->set('url_map', $url_map);
         $this->db->set('location_address', $location_address);
@@ -196,15 +188,18 @@ class events_model extends CI_Model {
             $data = array(
                 'event_id' => $event_id,
                 'sport_id' => $sport['acara'],
-                'veteran_age' => $sport['veteran_age'],
-                'veteran_num' => $sport['veteran_limit'],
-                'male_num' => $sport['male_num'],
-                'female_num' => $sport['female_num'],
-                'pengurus_num' => $sport['pengurus_num'],
-                'jurulatih_num' => $sport['jurulatih_num'],
-                'pemain_num' => $sport['pemain_num'],
-                'fisio_num' => $sport['fisio_num'],
-                'kitman_num' => $sport['kitman_num'],
+                'veteran_age_male' => (empty($sport['veteran_age_male']) || $sport['veteran_age_male'] == 0)?99:$sport['veteran_age_male'],
+                'veteran_age_female' => (empty($sport['veteran_age_female']) || $sport['veteran_age_female'] == 0)?99:$sport['veteran_age_female'],
+                'veteran_num' => (empty($sport['veteran_limit']) || $sport['veteran_limit'] == 0)?99:$sport['veteran_limit'],
+                'male_num' => (empty($sport['male_num']) || $sport['male_num'] == 0)?99:$sport['male_num'],
+                'female_num' => (empty($sport['female_num']) || $sport['female_num'] == 0)?99:$sport['female_num'],
+                'pengurus_num' => (empty($sport['pengurus_num']) || $sport['pengurus_num'] == 0)?99:$sport['pengurus_num'],
+                'jurulatih_num' => (empty($sport['jurulatih_num']) || $sport['jurulatih_num'] == 0)?99:$sport['jurulatih_num'],
+                'pemain_num' => (empty($sport['pemain_num']) || $sport['pemain_num'] == 0)?99:$sport['pemain_num'],
+                'pemain_kebangsaan_num' => (empty($sport['pemain_kebangsaan_num']) || $sport['pemain_kebangsaan_num'] == 0)?99:$sport['pemain_kebangsaan_num'],
+                'fisio_num' => (empty($sport['fisio_num']) || $sport['fisio_num'] == 0)?99:$sport['fisio_num'],
+                'kitman_num' => (empty($sport['kitman_num']) || $sport['kitman_num'] == 0)?99:$sport['kitman_num'],
+                'koreografer_num' => (empty($sport['koreografer_num']) || $sport['koreografer_num'] == 0)?99:$sport['koreografer_num'],
                 'created_by' => $_SESSION['userid'],
                 'created_date' => date('Y-m-d H:i:s')
             );
@@ -212,6 +207,7 @@ class events_model extends CI_Model {
             $this->db->insert('events_sports', $data);
             
             $sport_id_arr[] = $sport['acara'];
+            $this->logs_model->insert(0, $event_id, $sport['acara'], 0, 'Acara dan kejohanan direka', $_SESSION['userid']);
         }
         
         if ( count( $sport_id_arr ) !== count( array_unique( $sport_id_arr ) ) ){
@@ -247,20 +243,24 @@ class events_model extends CI_Model {
                 $data = array(
                     'event_id' => $event_id,
                     'sport_id' => $sport['acara'],
-                    'veteran_age' => $sport['veteran_age'],
-                    'veteran_num' => $sport['veteran_limit'],
-                    'male_num' => $sport['male_num'],
-                    'female_num' => $sport['female_num'],
-                    'pengurus_num' => $sport['pengurus_num'],
-                    'jurulatih_num' => $sport['jurulatih_num'],
-                    'pemain_num' => $sport['pemain_num'],
-                    'fisio_num' => $sport['fisio_num'],
-                    'kitman_num' => $sport['kitman_num'],
+                    'veteran_age_male' => (empty($sport['veteran_age_male']) || $sport['veteran_age_male'] == 0)?99:$sport['veteran_age_male'],
+                    'veteran_age_female' => (empty($sport['veteran_age_female']) || $sport['veteran_age_female'] == 0)?99:$sport['veteran_age_female'],
+                    'veteran_num' => (empty($sport['veteran_limit']) || $sport['veteran_limit'] == 0)?99:$sport['veteran_limit'],
+                    'male_num' => (empty($sport['male_num']) || $sport['male_num'] == 0)?99:$sport['male_num'],
+                    'female_num' => (empty($sport['female_num']) || $sport['female_num'] == 0)?99:$sport['female_num'],
+                    'pengurus_num' => (empty($sport['pengurus_num']) || $sport['pengurus_num'] == 0)?99:$sport['pengurus_num'],
+                    'jurulatih_num' => (empty($sport['jurulatih_num']) || $sport['jurulatih_num'] == 0)?99:$sport['jurulatih_num'],
+                    'pemain_num' => (empty($sport['pemain_num']) || $sport['pemain_num'] == 0)?99:$sport['pemain_num'],
+                    'pemain_kebangsaan_num' => (empty($sport['pemain_kebangsaan_num']) || $sport['pemain_kebangsaan_num'] == 0)?99:$sport['pemain_kebangsaan_num'],
+                    'fisio_num' => (empty($sport['fisio_num']) || $sport['fisio_num'] == 0)?99:$sport['fisio_num'],
+                    'kitman_num' => (empty($sport['kitman_num']) || $sport['kitman_num'] == 0)?99:$sport['kitman_num'],
+                    'koreografer_num' => (empty($sport['koreografer_num']) || $sport['koreografer_num'] == 0)?99:$sport['koreografer_num'],
                     'created_by' => $_SESSION['userid'],
                     'created_date' => date('Y-m-d H:i:s')
                 );
 
                 $this->db->insert('events_sports', $data);
+                $this->logs_model->insert(0, $event_id, $sport['acara'], 0, 'Acara dan kejohanan ditukar', $_SESSION['userid']);
             }
             return true;
         }
@@ -284,48 +284,8 @@ class events_model extends CI_Model {
         $this->db->where('id', $event_id);
         $this->db->update('events');
 
-        $this->db->from('user');
-        $query = $this->db->get();
-        $result = $query->result();
-
-        if(count($result) > 0){
-            $this->db->from('events');
-            $this->db->where('id', $event_id);
-            $query1 = $this->db->get();
-            $result1 = $query1->result();
-
-            foreach($result as $res){
-                $to = $res->email;
-                $subject = "MAKSAK : Aktif kejohanan";
-
-                $message = "
-                <html>
-                <head>
-                <title>Aktif Kejohanan</title>
-                </head>
-                <body>
-                <br>
-                Kejohanan : <b><h3>" . $result1[0]->name . "</h3></b>
-                <br>
-                Status : <b><h3 style='color:green;'>Aktif</h3></b>
-                <br>
-                Pendaftaran pemain boleh dimulakan.
-                </body>
-                </html>
-                ";
-
-                // Always set content-type when sending HTML email
-                $headers = "MIME-Version: 1.0" . "\r\n";
-                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-
-                // More headers
-                $headers .= 'From: <webmaster@example.com>' . "\r\n";
-                $headers .= "Reply-To: The Sender <webmaster@example.com>\r\n";
-                $headers .= "Return-Path: webmaster@example.com\r\n";
-
-                mail($to, $subject, $message, $headers);
-            }
-        }
+        $this->logs_model->insert(0, $event_id, 0, 0, 'Kejohanan diterbit', $_SESSION['userid']);
+        
         return;
     }
     
@@ -335,6 +295,8 @@ class events_model extends CI_Model {
         $this->db->where('id', $event_id);
         $this->db->update('events');
         
+        $this->logs_model->insert(0, $event_id, 0, 0, 'Kejohanan dibatalkan', $_SESSION['userid']);
+
         $this->db->from('user');
         $query = $this->db->get();
         $result = $query->result();
@@ -383,7 +345,7 @@ class events_model extends CI_Model {
     function get_list() {
         $this->db->select('events.*');
         $this->db->from('events');
-        if($_SESSION['role'] == 2){
+        if(isset($_SESSION['role']) && $_SESSION['role'] == 2){
             $this->db->where('publish_status', 1);
         }
         $this->db->order_by('id', 'desc');
@@ -493,6 +455,63 @@ class events_model extends CI_Model {
         
         return $result;
     }
+
+    function get_olahraga_report($id) {
+
+        $response = array();
+        
+        $this->db->select('register.name, register.ic, register.player_id, badan_gabungan.name as badan_gabungan_name');
+        $this->db->from('register');
+        $this->db->join('badan_gabungan', 'register.badan_gabungan_id = badan_gabungan.id');
+        $this->db->where('event_id', $id);
+        $this->db->where('playing_position', 'pemain');
+        if(isset($_SESSION['badan_gabungan_id']) && $_SESSION['badan_gabungan_id'] != 0){ 
+            $this->db->where('badan_gabungan_id', $_SESSION['badan_gabungan_id']);
+        }
+        $this->db->order_by('name', 'asc');
+        $this->db->distinct('player_id');
+        $query = $this->db->get();
+        $result = $query->result();
+        
+        $this->db->select('events_sports.*, sports.name');
+        $this->db->from('events_sports');
+        $this->db->join('sports', 'events_sports.sport_id = sports.id');
+        $this->db->where('events_sports.event_id', $id);
+        $this->db->order_by('sports.name', 'asc');
+        $query1 = $this->db->get();
+        $sport_list = $query1->result();
+        $response['sport_list'] = $sport_list;
+
+        if(count($result) > 0){
+            $a = 0;
+            foreach($result as $res){
+                $response['data'][$a]['name'] = $res->name;
+                $response['data'][$a]['ic'] = $res->ic;
+                $response['data'][$a]['badan_gabungan'] = $res->badan_gabungan_name;
+                
+                foreach($sport_list as $sport){
+                    
+
+                    $this->db->select('register.id');
+                    $this->db->from('register');
+                    $this->db->where('event_id', $id);
+                    $this->db->where('sport_id', $sport->sport_id);
+                    $this->db->where('player_id', $res->player_id);
+                    $registered = $this->db->get();
+                    $registered = $registered->row();
+
+                    if(empty($registered)){
+                        $response['data'][$a][$sport->name] = 0;
+                    } else {
+                        $response['data'][$a][$sport->name] = 1;
+                    }
+                }
+                $a++;
+            }
+        }
+        
+        return $response;
+    }
     
     function get_current_events() {
         
@@ -522,6 +541,22 @@ class events_model extends CI_Model {
         
 
         return $return;
+    }
+
+    function get_by_id($id)
+    {
+        $this->db->from('events');
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    function get_location_by_id($id)
+    {
+        $this->db->from('events_location');
+        $this->db->where('event_id', $id);
+        $query = $this->db->get();
+        return $query->row();
     }
 
     function get_detail($id) {
@@ -554,19 +589,20 @@ class events_model extends CI_Model {
         $result['sports'] = array();
         if(count($sport_list) > 0){
             foreach($sport_list as $sport){
-                $this->db->distinct();
                 $this->db->select('badan_gabungan_id');
                 $this->db->from('register');
                 $this->db->where('event_id', $id);
-                $this->db->where('sport_id', $sport->id);
+                $this->db->where('sport_id', $sport->sport_id);
+                $this->db->distinct('badan_gabungan_id');
                 $query2 = $this->db->get();
                 $badan_list = $query2->result();
-                
+                // echo "<pre>"; print_r($this->db->last_query()); die();
                 $sport->jumlah_badan_berdaftar = count($badan_list);
+                // $sport->sql = $this->db->last_query();
                 $result['sports'][] = $sport;
             }
         } 
-        
+        // echo "<pre>"; print_r($result['sports']); die();
         return $result;
     }
 
@@ -581,6 +617,48 @@ class events_model extends CI_Model {
         return implode($pass); //turn the array into a string
     }
 
+    function get_dashboard_data($year)
+    {
+        $return = array();
+
+        $this->db->from('events');
+        $query = $this->db->get();
+        $return['all'] = $query->num_rows();
+
+        $this->db->from('events');
+        $this->db->join('events_location','events_location.event_id = events.id');
+        $this->db->where('YEAR(events_location.date_from)', $year);
+        $query = $this->db->get();
+        $return['this_year'] = $query->num_rows();
+
+        return $return;
+    }
+
+    function get_dashboard_barchart_data($year)
+    {
+        $return = array();
+        $return[] = array('Bulan', 'Pemain');
+
+        for($month = 1; $month < 13; $month++){
+            $month2 = sprintf("%02d", $month);
+
+            $this->db->select('register.*');
+            $this->db->from('events');
+            $this->db->join('events_location','events_location.event_id = events.id');
+            $this->db->join('register','register.event_id = events.id');
+            $this->db->where('events_location.date_from >=', $year.'-'.$month2.'-01 00:00:00');
+            $this->db->where('events_location.date_from <=', $year.'-'.$month2.'-31 23:59:59');
+            $query = $this->db->get();
+            $num = $query->num_rows();
+
+            $time = strtotime($month2.'/1/2003');
+            $monthText = date('F',$time);
+
+            $return[] = array($monthText, $num);
+        }
+        
+        return $return;
+    }
 }
 
 ?>

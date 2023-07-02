@@ -74,7 +74,7 @@
                                                                     <!--begin::Section-->
                                                                     <div class="kt-section">
                                                                         <div class="kt-section__content">
-                                                                            <table class="table table-striped" id="sortTable">
+                                                                            <table class="table table-striped sortTable">
                                                                                 <thead>
                                                                                     <th>Nama</th>
                                                                                     <th>Email</th>
@@ -85,7 +85,10 @@
                                                                                 </thead>
                                                                                 <tbody>
                                                                                     <tr>
-                                                                                        <td><?php echo $player->name; ?></td>
+                                                                                        <td>
+                                                                                            <a target="_blank" href="<?php $pic = 'default_avatar.jpeg'; if(!empty($player->passport_pic)){ $pic = $player->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>"><img class="kt-hidden-" style="width: 25px; height: 25px;" alt="Pic" src="<?php $pic = 'default_avatar.jpeg'; if(!empty($player->passport_pic)){ $pic = $player->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>" /></a>
+                                                                                            <?php echo strtoupper($player->name); ?>
+                                                                                        </td>
                                                                                         <td><?php echo $player->email; ?></td>
                                                                                         <td><?php echo $player->dob_day.'-'.$player->dob_month.'-'.$player->dob_year; ?></td>
                                                                                         <td><?php if($player->sex == 1){ echo 'Lelaki'; }else{ echo 'Perempuan'; } ?></td>
@@ -111,9 +114,8 @@
                                         </div>
                                     </div>
                                     <!--End::Section-->
-                                    <?php if ($_SESSION['role'] == 0 || $_SESSION['role'] == 1) { ?>
                                     <!--Begin::Section-->
-                                    <div class="row">
+                                    <!-- <div class="row">
                                         <div class="col-xl-12">
                                             <div class="kt-portlet kt-portlet--mobile">
                                                 <div class="kt-portlet__head kt-portlet__head--lg">
@@ -126,15 +128,14 @@
                                                 <div class="kt-portlet__body kt-portlet__body--fit">
                                                     <div style="padding: 20px;">
                                                         <div class="accordion accordion-solid accordion-toggle-plus" id="accordionBox">
-                                                        <!--begin::Accordion-->
                                                             <div class="card-body">
                                                                 <div class="kt-portlet__body">
-                                                                    <!--begin::Section-->
                                                                     <div class="kt-section">
                                                                         <div class="kt-section__content">
-                                                                            <table class="table table-striped" id="sortTable">
+                                                                            <table class="table table-striped sortTable">
                                                                                 <thead>
                                                                                     <th>Nama</th>
+                                                                                    <th>Badan Gabungan</th>
                                                                                     <th>Email</th>
                                                                                     <th>Tarikh Lahir</th>
                                                                                     <th>Jantina</th>
@@ -144,7 +145,11 @@
                                                                                 <tbody>
                                                                                     <?php if(isset($players_list) && count($players_list) > 0){ foreach($players_list as $player){ ?>
                                                                                     <tr>
-                                                                                        <td><?php echo $player->name; ?></td>
+                                                                                        <td>
+                                                                                            <a target="_blank" href="<?php $pic = 'default_avatar.jpeg'; if(!empty($player->passport_pic)){ $pic = $player->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>"><img class="kt-hidden-" style="width: 25px; height: 25px;" alt="Pic" src="<?php $pic = 'default_avatar.jpeg'; if(!empty($player->passport_pic)){ $pic = $player->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>" /></a>
+                                                                                            <a target="_blank" href="/players/details?id=<?php echo $player->id; ?>"><?php echo strtoupper($player->name); ?></a>
+                                                                                        </td>
+                                                                                        <td><?php echo $player->badan_name; ?></td>
                                                                                         <td><?php echo $player->email; ?></td>
                                                                                         <td><?php echo $player->dob_day.'-'.$player->dob_month.'-'.$player->dob_year; ?></td>
                                                                                         <td><?php if($player->sex == 1){ echo 'Lelaki'; }else{ echo 'Perempuan'; } ?></td>
@@ -160,7 +165,6 @@
                                                                             </table>
                                                                         </div>
                                                                     </div>
-                                                                    <!--end::Section-->
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -168,9 +172,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <!--End::Section-->
-                                    <?php } ?>
 				</div>
                                 <!-- end:: Content -->
                             </div>
@@ -179,9 +182,6 @@
 		<?php include "template/footer-page.php"; ?>		
 
 		<?php include "template/global-script.php"; ?>
-                <script type="text/javascript">
-			$('#sortTable').DataTable();
-		</script>
 		<!--begin::Page Vendors(used by this page) -->
 		<!--end::Page Vendors -->
 

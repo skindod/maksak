@@ -121,9 +121,16 @@
                                                                     <span class="form-text text-muted">Nama kejohanan berserta tahun penganjuran</span>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="exampleTextarea">Gambar/Ikon kejohanan</label>
+                                                                    <label for="exampleTextarea">
+                                                                        Gambar/Ikon kejohanan
+                                                                        <?php if(!empty($event[0]->image)){ ?>
+                                                                            <a target="_blank" href="<?php echo base_url().'images/events/'.$event[0]->image; ?>">
+                                                                                <img class="kt-hidden-" style="width: 25px; height: 25px;" alt="Pic" src="<?php echo base_url().'images/events/'.$event[0]->image; ?>">
+                                                                            </a>
+                                                                        <?php } ?>
+                                                                    </label>
                                                                     <input class="form-control" type="file" name="event_file">
-                                                                    <span class="form-text text-muted">Hanya file 'jpg' dan 'png' sahaja dibenarkan</span>
+                                                                    <span class="form-text text-muted">Hanya file 'jpg','png','jpeg','heic' sahaja dibenarkan</span>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="exampleTextarea">Penerangan tentang kejohanan</label>
@@ -254,24 +261,35 @@
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
                                                                                 </div>
-                                                                                <div class="col-md-3">
+                                                                                <div class="col-md-2">
                                                                                     <div class="kt-form__group--inline">
                                                                                         <div class="kt-form__label">
-                                                                                            <label class="kt-label m-label--single">Umur veteran</label>
+                                                                                            <label class="kt-label m-label--single">Umur veteran lelaki</label>
                                                                                         </div>
                                                                                         <div class="kt-form__control">
-                                                                                            <input type="number" name="veteran_age" class="form-control" value="<?php echo $event_sport->veteran_age; ?>">
+                                                                                            <input type="number" name="veteran_age_male" class="form-control" value="<?php echo ($event_sport->veteran_age_male == 99)?'':$event_sport->veteran_age_male; ?>">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
                                                                                 </div>
-                                                                                <div class="col-md-3">
+                                                                                <div class="col-md-2">
+                                                                                    <div class="kt-form__group--inline">
+                                                                                        <div class="kt-form__label">
+                                                                                            <label class="kt-label m-label--single">Umur veteran perempuan</label>
+                                                                                        </div>
+                                                                                        <div class="kt-form__control">
+                                                                                            <input type="number" name="veteran_age_female" class="form-control" value="<?php echo ($event_sport->veteran_age_female == 99)?'':$event_sport->veteran_age_female; ?>">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="d-md-none kt-margin-b-10"></div>
+                                                                                </div>
+                                                                                <div class="col-md-2">
                                                                                     <div class="kt-form__group--inline">
                                                                                         <div class="kt-form__label">
                                                                                             <label class="kt-label m-label--single">Bilangan veteran</label>
                                                                                         </div>
                                                                                         <div class="kt-form__control">
-                                                                                            <input type="number" name="veteran_limit" class="form-control" value="<?php echo $event_sport->veteran_num; ?>">
+                                                                                            <input type="number" name="veteran_limit" class="form-control" value="<?php echo ($event_sport->veteran_num == 99)?'':$event_sport->veteran_num; ?>">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
@@ -282,7 +300,7 @@
                                                                                             <label class="kt-label m-label--single">Bilangan Lelaki</label>
                                                                                         </div>
                                                                                         <div class="kt-form__control">
-                                                                                            <input type="number" name="male_num" class="form-control" value="<?php echo $event_sport->male_num; ?>">
+                                                                                            <input type="number" name="male_num" class="form-control" value="<?php echo ($event_sport->male_num == 99)?'':$event_sport->male_num; ?>">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
@@ -293,7 +311,7 @@
                                                                                             <label class="kt-label m-label--single">Bilangan Perempuan</label>
                                                                                         </div>
                                                                                         <div class="kt-form__control">
-                                                                                            <input type="number" name="female_num" class="form-control" value="<?php echo $event_sport->female_num; ?>">
+                                                                                            <input type="number" name="female_num" class="form-control" value="<?php echo ($event_sport->female_num == 99)?'':$event_sport->female_num; ?>">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
@@ -314,7 +332,7 @@
                                                                                             <label class="kt-label m-label--single">Pengurus</label>
                                                                                         </div>
                                                                                         <div class="kt-form__control">
-                                                                                            <input type="number" name="pengurus_num" class="form-control" value="<?php echo $event_sport->pengurus_num; ?>">
+                                                                                            <input type="number" name="pengurus_num" class="form-control" value="<?php echo ($event_sport->pengurus_num == 99)?'':$event_sport->pengurus_num; ?>">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
@@ -325,7 +343,7 @@
                                                                                             <label class="kt-label m-label--single">Jurulatih</label>
                                                                                         </div>
                                                                                         <div class="kt-form__control">
-                                                                                            <input type="number" name="jurulatih_num" class="form-control" value="<?php echo $event_sport->jurulatih_num; ?>">
+                                                                                            <input type="number" name="jurulatih_num" class="form-control" value="<?php echo ($event_sport->jurulatih_num == 99)?'':$event_sport->jurulatih_num; ?>">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
@@ -336,7 +354,18 @@
                                                                                             <label class="kt-label m-label--single">Pemain</label>
                                                                                         </div>
                                                                                         <div class="kt-form__control">
-                                                                                            <input type="number" name="pemain_num" class="form-control" value="<?php echo $event_sport->pemain_num; ?>">
+                                                                                            <input type="number" name="pemain_num" class="form-control" value="<?php echo ($event_sport->pemain_num == 99)?'':$event_sport->pemain_num; ?>">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="d-md-none kt-margin-b-10"></div>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <div class="kt-form__group--inline">
+                                                                                        <div class="kt-form__label">
+                                                                                            <label class="kt-label m-label--single">Pemain Kebangsaan</label>
+                                                                                        </div>
+                                                                                        <div class="kt-form__control col-6">
+                                                                                            <input type="number" name="pemain_kebangsaan_num" class="form-control" value="<?php echo ($event_sport->pemain_kebangsaan_num == 99)?'':$event_sport->pemain_kebangsaan_num; ?>">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
@@ -347,7 +376,7 @@
                                                                                             <label class="kt-label m-label--single">Fisio</label>
                                                                                         </div>
                                                                                         <div class="kt-form__control">
-                                                                                            <input type="number" name="fisio_num" class="form-control" value="<?php echo $event_sport->fisio_num; ?>">
+                                                                                            <input type="number" name="fisio_num" class="form-control" value="<?php echo ($event_sport->fisio_num == 99)?'':$event_sport->fisio_num; ?>">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
@@ -358,7 +387,18 @@
                                                                                             <label class="kt-label m-label--single">Kitman</label>
                                                                                         </div>
                                                                                         <div class="kt-form__control">
-                                                                                            <input type="number" name="kitman_num" class="form-control" value="<?php echo $event_sport->kitman_num; ?>">
+                                                                                            <input type="number" name="kitman_num" class="form-control" value="<?php echo ($event_sport->kitman_num == 99)?'':$event_sport->kitman_num; ?>">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="d-md-none kt-margin-b-10"></div>
+                                                                                </div>
+                                                                                <div class="col-md-2">
+                                                                                    <div class="kt-form__group--inline">
+                                                                                        <div class="kt-form__label">
+                                                                                            <label class="kt-label m-label--single">Koreografer</label>
+                                                                                        </div>
+                                                                                        <div class="kt-form__control">
+                                                                                            <input type="number" name="koreografer_num" class="form-control" value="<?php echo ($event_sport->koreografer_num == 99)?'':$event_sport->koreografer_num; ?>">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
@@ -408,18 +448,29 @@
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
                                                                                 </div>
-                                                                                <div class="col-md-3">
+                                                                                <div class="col-md-2">
                                                                                     <div class="kt-form__group--inline">
                                                                                         <div class="kt-form__label">
-                                                                                            <label class="kt-label m-label--single">Umur veteran</label>
+                                                                                            <label class="kt-label m-label--single">Umur veteran lelaki</label>
                                                                                         </div>
                                                                                         <div class="kt-form__control">
-                                                                                            <input type="number" name="veteran_age" class="form-control">
+                                                                                            <input type="number" name="veteran_age_male" class="form-control">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
                                                                                 </div>
-                                                                                <div class="col-md-3">
+                                                                                <div class="col-md-2">
+                                                                                    <div class="kt-form__group--inline">
+                                                                                        <div class="kt-form__label">
+                                                                                            <label class="kt-label m-label--single">Umur veteran perempuan</label>
+                                                                                        </div>
+                                                                                        <div class="kt-form__control">
+                                                                                            <input type="number" name="veteran_age_female" class="form-control">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="d-md-none kt-margin-b-10"></div>
+                                                                                </div>
+                                                                                <div class="col-md-2">
                                                                                     <div class="kt-form__group--inline">
                                                                                         <div class="kt-form__label">
                                                                                             <label class="kt-label m-label--single">Bilangan veteran</label>
@@ -513,6 +564,17 @@
                                                                                         </div>
                                                                                         <div class="kt-form__control">
                                                                                             <input type="number" name="kitman_num" class="form-control">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="d-md-none kt-margin-b-10"></div>
+                                                                                </div>
+                                                                                <div class="col-md-2">
+                                                                                    <div class="kt-form__group--inline">
+                                                                                        <div class="kt-form__label">
+                                                                                            <label class="kt-label m-label--single">Koreografer</label>
+                                                                                        </div>
+                                                                                        <div class="kt-form__control">
+                                                                                            <input type="number" name="koreografer_num" class="form-control">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>

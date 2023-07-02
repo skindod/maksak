@@ -101,6 +101,24 @@ class badangabungan_model extends CI_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    function get_user_list()
+    {
+        $this->db->select('user.*, badan_gabungan.name as badan_name');
+        $this->db->from('user');
+        $this->db->join('badan_gabungan', 'user.badan_gabungan_id = badan_gabungan.id');
+        $this->db->where('badan_gabungan_id !=', '');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    function get_by_id($id)
+    {
+        $this->db->from('badan_gabungan');
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
     
     function randomPassword() {
         $alphabet = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789';

@@ -24,10 +24,10 @@ class result_model extends CI_Model
             foreach($result as $res){
                 $this->db->select('points.name as position');
                 $this->db->select('points.point');
-                $this->db->select('states.name');
+                $this->db->select('badan_gabungan.name');
                 $this->db->from('result'); 
                 $this->db->join('points', 'result.point_id = points.id', 'LEFT');
-                $this->db->join('states', 'result.state_id = states.id', 'LEFT');
+                $this->db->join('badan_gabungan', 'result.state_id = badan_gabungan.id', 'LEFT');
                 $this->db->where('result.event_id', $event_id);
                 $this->db->where('result.sport_id', $res->sport_id);
                 $this->db->order_by('points.id', 'ASC');
@@ -37,13 +37,58 @@ class result_model extends CI_Model
                 $res->result = $result1;
             }
         }
-//        echo '<pre>';        print_r($result); die();
+
         return $result;
+    }
+
+    public function get_ranking_data($year)
+    {
+        $this->db->select_sum('points.point');
+        $this->db->select('badan_gabungan.name');
+        $this->db->from('result'); 
+        $this->db->join('events', 'result.event_id = events.id', 'LEFT');
+        $this->db->join('events_location', 'events.id = events_location.event_id', 'LEFT');
+        $this->db->join('points', 'result.point_id = points.id', 'LEFT');
+        $this->db->join('badan_gabungan', 'result.state_id = badan_gabungan.id', 'LEFT');
+        $this->db->where('YEAR(events_location.date_from)', $year);
+        $this->db->group_by("badan_gabungan.name");
+        $this->db->order_by('point', 'DESC');
+        $query1 = $this->db->get();
+        $result1 = $query1->result();
+
+        
+        // $this->db->select('events_sports.sport_id');
+        // $this->db->select('sports.name');
+        // $this->db->from('events_sports');
+        // $this->db->join('sports', 'sports.id = events_sports.sport_id');
+        // $this->db->where('event_id', $event_id);
+        // $query = $this->db->get();
+        // $result = $query->result();
+        
+        // if(count($result) > 0){
+        //     foreach($result as $res){
+        //         $this->db->select('points.name as position');
+        //         $this->db->select('points.point');
+        //         $this->db->select('badan_gabungan.name');
+        //         $this->db->from('result'); 
+        //         $this->db->join('points', 'result.point_id = points.id', 'LEFT');
+        //         $this->db->join('badan_gabungan', 'result.state_id = badan_gabungan.id', 'LEFT');
+        //         $this->db->where('result.event_id', $event_id);
+        //         $this->db->where('result.sport_id', $res->sport_id);
+        //         $this->db->order_by('points.id', 'ASC');
+        //         $query1 = $this->db->get();
+        //         $result1 = $query1->result();
+                
+        //         $res->result = $result1;
+        //     }
+        // }
+        
+        return $result1;
     }
     
     public function get_list_per_state($event_id)
     {
-        $this->db->from('states');
+        $this->db->from('badan_gabungan');
         $query = $this->db->get();
         $states = $query->result();
         
@@ -103,7 +148,7 @@ class result_model extends CI_Model
             $num++;
         }
         $return_str .= ']';
-//        echo '<pre>';        print_r($return_str); die();
+
         return $return_str;
     }
 

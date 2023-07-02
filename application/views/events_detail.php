@@ -190,6 +190,9 @@
                                                                         Daftar pemain baharu
                                                                 </h3>
                                                             </div>
+                                                            <div class="mt-3">
+                                                                <a target="_blank" href="<?php echo base_url(); ?>events/generate_olahraga_report/<?php echo $event_details[0]->id; ?>" class="btn btn-warning float-right">Menjana laporan olahraga</a>
+                                                            </div>
                                                         </div>
                                                         <div class="kt-widget14">
                                                             <?php $attributes = array("id" => "forgetaccountform", "name" => "forgetaccountform", "class" => "kt-form");
@@ -226,14 +229,15 @@
                                                                     <input type="ic" class="form-control" aria-describedby="ic" name="ic" placeholder="Sila isikan tanpa sempang '-'" required="">
                                                                 </div>
                                                                 <div class="col-md-2 form-group">
-                                                                    <label>Pilih jawatan</label>
+                                                                    <label>Pilih jawatan dalam pasukan</label>
                                                                     <select class="form-control selectpicker" name="jawatan" required="">
                                                                         <option value="">Sila pilih</option>
                                                                         <option value="pengurus">Pengurus</option>
                                                                         <option value="jurulatih">Jurulatih</option>
                                                                         <option value="pemain">Pemain</option>
-                                                                        <option value="fisioterapi">Fisio</option>
+                                                                        <option value="fisio">Fisio</option>
                                                                         <option value="kitman">Kitman</option>
+                                                                        <option value="koreografer">Koreografer</option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-md-1 form-group">
@@ -245,8 +249,9 @@
                                                         </div>
                                                         <div class="kt-widget14">
                                                             <?php if(count($registered_list) > 0){ foreach($registered_list as $reg){  ?>
-                                                                <h5><?php echo $reg->sport_name; ?></h5>
-                                                                <table class="table table-striped" id="sortTable">
+                                                                <h4><?php echo $reg->sport_name; ?></h4>
+                                                                <!-- <a class="toggle-vis<?php echo $reg->id; ?>" data-column="7">Lihat/Sembunyi `Handikap`</a> -->
+                                                                <table class="table table-striped" id="sortTable<?php echo $reg->id; ?>">
                                                                     <thead>
                                                                         <th>No.</th>
                                                                         <th>Nama</th>
@@ -255,12 +260,22 @@
                                                                         <th>Umur</th>
                                                                         <th>Jantina</th>
                                                                         <th>Taraf Jawatan</th>
+                                                                        <th>Handikap</th>
+                                                                        <th>Buang Pemain</th>
                                                                     </thead>
                                                                     <tbody>
                                                                         <?php if(count($reg->registered_list) > 0){$num = 1; foreach($reg->registered_list as $player){  ?>
                                                                             <tr>
                                                                                 <th scope="row"><?php echo $num; ?></th>
-                                                                                <td><?php echo $player->name; ?></td>
+                                                                                <td>
+                                                                                    <a target="_blank" href="<?php $pic = 'default_avatar.jpeg'; if(!empty($player->passport_pic)){ $pic = $player->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>"><img class="kt-hidden-" style="width: 25px; height: 25px;" alt="Pic" src="<?php $pic = 'default_avatar.jpeg'; if(!empty($player->passport_pic)){ $pic = $player->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>" /></a>
+                                                                                    <?php 
+                                                                                        if(!isset($_SESSION['login'])){ ?>
+                                                                                            <?php echo strtoupper($player->name); ?>
+                                                                                        <?php }else{ ?>
+                                                                                            <a href="/players/details?id=<?php echo $player->player_id; ?>" target="_blank"><?php echo strtoupper($player->name); ?></a>
+                                                                                    <?php } ?>
+                                                                                </td>
                                                                                 <td><?php echo $player->badan_gabungan_name; ?></td>
                                                                                 <td><?php echo ucfirst($player->playing_position); ?></td>
                                                                                 <td>
@@ -273,21 +288,69 @@
                                                                                 <td>
                                                                                     <?php if($player->state_of_position == 'tetap'){ ?>
                                                                                         Tetap
+                                                                                        <?php if(isset($player->surat_hrmis) && $player->surat_hrmis != ''){ ?>
+                                                                                            <a href="<?php echo base_url().'images/surat_hrmis/'.$player->surat_hrmis; ?>" target="_blank" data-toggle="tooltip" title="Laporan Profil Perkhidmatan Semasa Hrmis / MyTentera / BAT C 20 / BAT C 10"><i class="flaticon2-file-1"></i></a>
+                                                                                        <?php } ?>
                                                                                     <?php } else if($player->state_of_position == 'sementara'){ ?>
                                                                                         Sementara 
-                                                                                        <a href="<?php echo base_url().'images/surat_pengesahan_jabatan/'.$player->surat_pengesahan_jabatan; ?>" target="_blank" data-toggle="tooltip" title="Surat pengesahan jabatan"><i class="flaticon2-file-1"></i></a>
+                                                                                        <?php if(isset($_SESSION['login'])){ ?>
+                                                                                            <a href="<?php echo base_url().'images/surat_pengesahan_jabatan/'.$player->surat_pengesahan_jabatan; ?>" target="_blank" data-toggle="tooltip" title="Surat pengesahan jabatan"><i class="flaticon2-file-1"></i></a>
+                                                                                        <?php } ?>
                                                                                     <?php } else if($player->state_of_position == 'contract of service'){ ?>
                                                                                         Contract of Service 
-                                                                                        <a href="<?php echo base_url().'images/sah_surat_pelantikan/'.$player->sah_surat_pelantikan; ?>" target="_blank" data-toggle="tooltip" title="Sah surat pelantikan"><i class="flaticon2-file-1"></i></a>
-                                                                                        <a href="<?php echo base_url().'images/kad_pengenalan/'.$player->kad_pengenalan; ?>" target="_blank" data-toggle="tooltip" title="Kad pengenalan"><i class="flaticon2-file-1"></i></a>
-                                                                                        <a href="<?php echo base_url().'images/penyata_gaji/'.$player->penyata_gaji; ?>" target="_blank" data-toggle="tooltip" title="Penyata gaji"><i class="flaticon2-file-1"></i></a>
-                                                                                        <a href="<?php echo base_url().'images/caruman_kwsp/'.$player->caruman_kwsp; ?>" target="_blank" data-toggle="tooltip" title="Caruman KWSP"><i class="flaticon2-file-1"></i></a>
+                                                                                        <?php if(isset($_SESSION['login'])){ ?>
+                                                                                            <a href="<?php echo base_url().'images/sah_surat_pelantikan/'.$player->sah_surat_pelantikan; ?>" target="_blank" data-toggle="tooltip" title="Sah surat pelantikan"><i class="flaticon2-file-1"></i></a>
+                                                                                            <a href="<?php echo base_url().'images/kad_pengenalan/'.$player->kad_pengenalan; ?>" target="_blank" data-toggle="tooltip" title="Kad pengenalan"><i class="flaticon2-file-1"></i></a>
+                                                                                            <a href="<?php echo base_url().'images/penyata_gaji/'.$player->penyata_gaji; ?>" target="_blank" data-toggle="tooltip" title="Penyata gaji"><i class="flaticon2-file-1"></i></a>
+                                                                                            <a href="<?php echo base_url().'images/caruman_kwsp/'.$player->caruman_kwsp; ?>" target="_blank" data-toggle="tooltip" title="Caruman KWSP"><i class="flaticon2-file-1"></i></a>
+                                                                                        <?php } ?>
+                                                                                    <?php } else if($player->state_of_position == 'contract for service'){ ?>
+                                                                                        Contract for Service <br>
+                                                                                        <?php if(isset($_SESSION['login'])){ ?>
+                                                                                            <?php if(isset($player->surat_pelantikan_terkini)){ ?>
+                                                                                                <a href="<?php echo base_url().'images/surat_pelantikan_terkini/'.$player->surat_pelantikan_terkini; ?>" target="_blank" data-toggle="tooltip" title="Surat pelantikan terkini"><i class="flaticon2-file-1"></i></a>
+                                                                                            <?php } ?>
+                                                                                            <?php if(isset($player->surat_pelantikan_terdahulu)){ ?>
+                                                                                                <a href="<?php echo base_url().'images/surat_pelantikan_terdahulu/'.$player->surat_pelantikan_terdahulu; ?>" target="_blank" data-toggle="tooltip" title="Surat pelantikan terdahulu"><i class="flaticon2-file-1"></i></a>
+                                                                                            <?php } ?>
+                                                                                            <a href="<?php echo base_url().'images/kad_pengenalan/'.$player->kad_pengenalan; ?>" target="_blank" data-toggle="tooltip" title="Kad pengenalan"><i class="flaticon2-file-1"></i></a>
+                                                                                            <a href="<?php echo base_url().'images/penyata_gaji/'.$player->penyata_gaji; ?>" target="_blank" data-toggle="tooltip" title="Penyata gaji"><i class="flaticon2-file-1"></i></a>
+                                                                                            <a href="<?php echo base_url().'images/caruman_kwsp/'.$player->caruman_kwsp; ?>" target="_blank" data-toggle="tooltip" title="Caruman KWSP"><i class="flaticon2-file-1"></i></a>
+                                                                                        <?php } ?>
+                                                                                    <?php } else if($player->state_of_position == 'mystep'){ ?>
+                                                                                        MyStep<br>
+                                                                                        <?php if(isset($_SESSION['login'])){ ?>
+                                                                                            <?php if(isset($player->surat_pelantikan_terkini)){ ?>
+                                                                                                <a href="<?php echo base_url().'images/surat_pelantikan_terkini/'.$player->surat_pelantikan_terkini; ?>" target="_blank" data-toggle="tooltip" title="Surat pelantikan terkini"><i class="flaticon2-file-1"></i></a>
+                                                                                            <?php } ?>
+                                                                                            <?php if(isset($player->surat_pelantikan_terdahulu)){ ?>
+                                                                                                <a href="<?php echo base_url().'images/surat_pelantikan_terdahulu/'.$player->surat_pelantikan_terdahulu; ?>" target="_blank" data-toggle="tooltip" title="Surat pelantikan terdahulu"><i class="flaticon2-file-1"></i></a>
+                                                                                            <?php } ?>
+                                                                                            <a href="<?php echo base_url().'images/kad_pengenalan/'.$player->kad_pengenalan; ?>" target="_blank" data-toggle="tooltip" title="Kad pengenalan"><i class="flaticon2-file-1"></i></a>
+                                                                                            <a href="<?php echo base_url().'images/penyata_gaji/'.$player->penyata_gaji; ?>" target="_blank" data-toggle="tooltip" title="Penyata gaji"><i class="flaticon2-file-1"></i></a>
+                                                                                            <a href="<?php echo base_url().'images/caruman_kwsp/'.$player->caruman_kwsp; ?>" target="_blank" data-toggle="tooltip" title="Caruman KWSP"><i class="flaticon2-file-1"></i></a>
+                                                                                        <?php } ?>
                                                                                     <?php } ?>
+
+                                                                                </td>
+                                                                                <td><?php if($player->handicap_no != ''){ echo '<b>'.$player->handicap_no.'</b> ('.$player->nhs_id.')'; }else{ echo '-'; } ?></td>
+                                                                                <td>
+                                                                                    <?php echo form_open("events/remove_registered_player/".$event_details[0]->id."/".$player->id, $attributes); ?>
+                                                                                        <button class="btn btn-danger btn-md" type="submit" onclick="return confirm('Anda pasti buang pemain ini?')"><i class="flaticon2-trash"></i></button>
+                                                                                    <?php echo form_close(); ?>
                                                                                 </td>
                                                                             </tr>
                                                                         <?php $num++; } } else { ?>
                                                                             <tr>
-                                                                                <th colspan="7">Tiada pemain didaftar lagi</th>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
                                                                             </tr>
                                                                         <?php } ?>
                                                                     </tbody>
@@ -371,8 +434,9 @@
                                                                                                 <option value="pengurus" <?php if(isset($search_param['jawatan']) && $search_param['jawatan'] == 'pengurus'){ echo 'selected'; } ?> >Pengurus</option>
                                                                                                 <option value="jurulatih" <?php if(isset($search_param['jawatan']) && $search_param['jawatan'] == 'jurulatih'){ echo 'selected'; } ?> >Jurulatih</option>
                                                                                                 <option value="pemain" <?php if(isset($search_param['jawatan']) && $search_param['jawatan'] == 'pemain'){ echo 'selected'; } ?> >Pemain</option>
-                                                                                                <option value="fisioterapi" <?php if(isset($search_param['jawatan']) && $search_param['jawatan'] == 'fisioterapi'){ echo 'selected'; } ?> >Fisio</option>
+                                                                                                <option value="fisio" <?php if(isset($search_param['jawatan']) && $search_param['jawatan'] == 'fisio'){ echo 'selected'; } ?> >Fisio</option>
                                                                                                 <option value="kitman" <?php if(isset($search_param['jawatan']) && $search_param['jawatan'] == 'kitman'){ echo 'selected'; } ?> >Kitman</option>
+                                                                                                <option value="koreografer" <?php if(isset($search_param['jawatan']) && $search_param['jawatan'] == 'kitman'){ echo 'selected'; } ?> >Koreografer</option>
                                                                                         </select>
                                                                                     </div>
                                                                                 </div>
@@ -431,7 +495,7 @@
                                                                                         <!--begin::Section-->
                                                                                         <div class="kt-section">
                                                                                             <div class="kt-section__content">
-                                                                                                <table class="table table-striped" id="sortTable">
+                                                                                                <table class="table table-striped" id="sortTableSearch<?php echo $search->id; ?>">
                                                                                                     <thead>
                                                                                                         <th>No.</th>
                                                                                                         <th>Nama</th>
@@ -445,9 +509,16 @@
                                                                                                         <?php $num = 1; foreach($search->data_list as $data){ ?>
                                                                                                         <tr>
                                                                                                             <th scope="row"><?php echo $num; ?></th>
-                                                                                                            <td><?php echo $data->name; ?></td>
+                                                                                                            <td>
+                                                                                                                <a target="_blank" href="<?php $pic = 'default_avatar.jpeg'; if(!empty($data->passport_pic)){ $pic = $data->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>"><img class="kt-hidden-" style="width: 25px; height: 25px;" alt="Pic" src="<?php $pic = 'default_avatar.jpeg'; if(!empty($data->passport_pic)){ $pic = $data->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>" /></a>
+                                                                                                                <?php 
+                                                                                                                    if(!isset($_SESSION['login'])){ ?>
+                                                                                                                        <?php echo strtoupper($data->name); ?>
+                                                                                                                    <?php }else{ ?>
+                                                                                                                        <a href="/players/details?id=<?php echo $data->player_id; ?>" target="_blank"><?php echo strtoupper($data->name); ?></a></td>
+                                                                                                                <?php } ?>
                                                                                                             <td><?php echo ucfirst($data->playing_position); ?></td>
-                                                                                                            <td><?php echo $data->sport_name; ?></td>
+                                                                                                            <td><?php if(count($data->sports)>0){ foreach($data->sports as $sport){ echo $sport->sport_name."<br>"; } } ?></td>
                                                                                                             <td>
                                                                                                                 <?php echo $data->age; ?>
                                                                                                                 <?php if($data->veteran_status == 1){ ?>
@@ -457,16 +528,61 @@
                                                                                                             <td><?php if($data->sex == '1'){ echo 'Lelaki'; }else{ echo 'Perempuan'; } ?></td>
                                                                                                             <td>
                                                                                                                 <?php if($data->state_of_position == 'tetap'){ ?>
-                                                                                                                    Tetap
+                                                                                                                    Tetap<br>
+                                                                                                                    <?php if(isset($_SESSION['login']) && isset($data->surat_hrmis) && $data->surat_hrmis != ''){ ?>
+                                                                                                                        <a href="<?php echo base_url().'images/surat_hrmis/'.$data->surat_hrmis; ?>" target="_blank" data-toggle="tooltip" title="Laporan Profil Perkhidmatan Semasa Hrmis / MyTentera / BAT C 20 / BAT C 10"><i class="flaticon2-file-1"></i></a>
+                                                                                                                    <?php } ?>
                                                                                                                 <?php } else if($data->state_of_position == 'sementara'){ ?>
-                                                                                                                    Sementara 
-                                                                                                                    <a href="<?php echo base_url().'images/surat_pengesahan_jabatan/'.$data->surat_pengesahan_jabatan; ?>" target="_blank" data-toggle="tooltip" title="Surat pengesahan jabatan"><i class="flaticon2-file-1"></i></a>
+                                                                                                                    Sementara <br>
+                                                                                                                    <?php if(isset($_SESSION['login'])){ ?>
+                                                                                                                        <a href="<?php echo base_url().'images/surat_pengesahan_jabatan/'.$data->surat_pengesahan_jabatan; ?>" target="_blank" data-toggle="tooltip" title="Surat pengesahan jabatan"><i class="flaticon2-file-1"></i></a>
+                                                                                                                    <?php } ?>
                                                                                                                 <?php } else if($data->state_of_position == 'contract of service'){ ?>
-                                                                                                                    Contract of Service 
-                                                                                                                    <a href="<?php echo base_url().'images/sah_surat_pelantikan/'.$data->sah_surat_pelantikan; ?>" target="_blank" data-toggle="tooltip" title="Sah surat pelantikan"><i class="flaticon2-file-1"></i></a>
-                                                                                                                    <a href="<?php echo base_url().'images/kad_pengenalan/'.$data->kad_pengenalan; ?>" target="_blank" data-toggle="tooltip" title="Kad pengenalan"><i class="flaticon2-file-1"></i></a>
-                                                                                                                    <a href="<?php echo base_url().'images/penyata_gaji/'.$data->penyata_gaji; ?>" target="_blank" data-toggle="tooltip" title="Penyata gaji"><i class="flaticon2-file-1"></i></a>
-                                                                                                                    <a href="<?php echo base_url().'images/caruman_kwsp/'.$data->caruman_kwsp; ?>" target="_blank" data-toggle="tooltip" title="Caruman KWSP"><i class="flaticon2-file-1"></i></a>
+                                                                                                                    Contract of Service <br>
+                                                                                                                    <?php if(isset($_SESSION['login'])){ ?>
+                                                                                                                        <a href="<?php echo base_url().'images/sah_surat_pelantikan/'.$data->sah_surat_pelantikan; ?>" target="_blank" data-toggle="tooltip" title="Sah surat pelantikan"><i class="flaticon2-file-1"></i></a>
+                                                                                                                        <a href="<?php echo base_url().'images/kad_pengenalan/'.$data->kad_pengenalan; ?>" target="_blank" data-toggle="tooltip" title="Kad pengenalan"><i class="flaticon2-file-1"></i></a>
+                                                                                                                        <a href="<?php echo base_url().'images/penyata_gaji/'.$data->penyata_gaji; ?>" target="_blank" data-toggle="tooltip" title="Penyata gaji"><i class="flaticon2-file-1"></i></a>
+                                                                                                                        <a href="<?php echo base_url().'images/caruman_kwsp/'.$data->caruman_kwsp; ?>" target="_blank" data-toggle="tooltip" title="Caruman KWSP"><i class="flaticon2-file-1"></i></a>
+                                                                                                                    <?php } ?>
+                                                                                                                <?php } else if($data->state_of_position == 'contract for service'){ ?>
+                                                                                                                    Contract for Service <br>
+                                                                                                                    <?php if(isset($_SESSION['login'])){ ?>
+                                                                                                                        <?php if(isset($data->surat_pelantikan_terkini) && $data->surat_pelantikan_terkini != ''){ ?>
+                                                                                                                            <a href="<?php echo base_url().'images/surat_pelantikan_terkini/'.$data->surat_pelantikan_terkini; ?>" target="_blank" data-toggle="tooltip" title="Surat pelantikan terkini"><i class="flaticon2-file-1"></i></a>
+                                                                                                                        <?php } ?>
+                                                                                                                        <?php if(isset($data->surat_pelantikan_terdahulu) && $data->surat_pelantikan_terdahulu != ''){ ?>
+                                                                                                                            <a href="<?php echo base_url().'images/surat_pelantikan_terdahulu/'.$data->surat_pelantikan_terdahulu; ?>" target="_blank" data-toggle="tooltip" title="Surat pelantikan terdahulu"><i class="flaticon2-file-1"></i></a>
+                                                                                                                        <?php } ?>
+                                                                                                                        <?php if(isset($data->kad_pengenalan) && $data->kad_pengenalan != ''){ ?>
+                                                                                                                            <a href="<?php echo base_url().'images/kad_pengenalan/'.$data->kad_pengenalan; ?>" target="_blank" data-toggle="tooltip" title="Kad pengenalan"><i class="flaticon2-file-1"></i></a>
+                                                                                                                        <?php } ?>
+                                                                                                                        <?php if(isset($data->penyata_gaji) && $data->penyata_gaji != ''){ ?>
+                                                                                                                            <a href="<?php echo base_url().'images/penyata_gaji/'.$data->penyata_gaji; ?>" target="_blank" data-toggle="tooltip" title="Penyata gaji"><i class="flaticon2-file-1"></i></a>
+                                                                                                                        <?php } ?>
+                                                                                                                        <?php if(isset($data->caruman_kwsp) && $data->caruman_kwsp != ''){ ?>
+                                                                                                                            <a href="<?php echo base_url().'images/caruman_kwsp/'.$data->caruman_kwsp; ?>" target="_blank" data-toggle="tooltip" title="Caruman KWSP"><i class="flaticon2-file-1"></i></a>
+                                                                                                                        <?php } ?>
+                                                                                                                    <?php } ?>
+                                                                                                                <?php } else if($data->state_of_position == 'mystep'){ ?>
+                                                                                                                    MyStep<br>
+                                                                                                                    <?php if(isset($_SESSION['login'])){ ?>
+                                                                                                                        <?php if(isset($data->surat_pelantikan_terkini) && $data->surat_pelantikan_terkini != ''){ ?>
+                                                                                                                            <a href="<?php echo base_url().'images/surat_pelantikan_terkini/'.$data->surat_pelantikan_terkini; ?>" target="_blank" data-toggle="tooltip" title="Surat pelantikan terkini"><i class="flaticon2-file-1"></i></a>
+                                                                                                                        <?php } ?>
+                                                                                                                        <?php if(isset($data->surat_pelantikan_terdahulu) && $data->surat_pelantikan_terdahulu != ''){ ?>
+                                                                                                                            <a href="<?php echo base_url().'images/surat_pelantikan_terdahulu/'.$data->surat_pelantikan_terdahulu; ?>" target="_blank" data-toggle="tooltip" title="Surat pelantikan terdahulu"><i class="flaticon2-file-1"></i></a>
+                                                                                                                        <?php } ?>
+                                                                                                                        <?php if(isset($data->kad_pengenalan) && $data->kad_pengenalan != ''){ ?>
+                                                                                                                            <a href="<?php echo base_url().'images/kad_pengenalan/'.$data->kad_pengenalan; ?>" target="_blank" data-toggle="tooltip" title="Kad pengenalan"><i class="flaticon2-file-1"></i></a>
+                                                                                                                        <?php } ?>
+                                                                                                                        <?php if(isset($data->penyata_gaji) && $data->penyata_gaji != ''){ ?>
+                                                                                                                            <a href="<?php echo base_url().'images/penyata_gaji/'.$data->penyata_gaji; ?>" target="_blank" data-toggle="tooltip" title="Penyata gaji"><i class="flaticon2-file-1"></i></a>
+                                                                                                                        <?php } ?>
+                                                                                                                        <?php if(isset($data->caruman_kwsp) && $data->caruman_kwsp != ''){ ?>
+                                                                                                                            <a href="<?php echo base_url().'images/caruman_kwsp/'.$data->caruman_kwsp; ?>" target="_blank" data-toggle="tooltip" title="Caruman KWSP"><i class="flaticon2-file-1"></i></a>
+                                                                                                                        <?php } ?>
+                                                                                                                    <?php } ?>
                                                                                                                 <?php } ?>
                                                                                                             </td>
                                                                                                         </tr>
@@ -501,9 +617,6 @@
 		<?php include "template/footer-page.php"; ?>		
 
 		<?php include "template/global-script.php"; ?>
-                <script type="text/javascript">
-			$('#sortTable').DataTable();
-		</script>
 		<!--begin::Page Vendors(used by this page) -->
 		<!--end::Page Vendors -->
 
@@ -521,5 +634,47 @@
                         inputc.parentNode.removeChild(inputc);
                         alert("Pautan telah disalin.");
                     }
+
+                    <?php if(count($registered_list) > 0){ foreach($registered_list as $reg){  ?>
+                        var table<?php echo $reg->id; ?> = $('#sortTable<?php echo $reg->id; ?>').DataTable({
+                            dom: 'Bfrtip',
+                            buttons: [
+                                {
+                                    extend: 'csvHtml5',
+                                    title: '<?php echo $reg->sport_name; ?>',
+                                },
+                                {
+                                    extend: 'pdf',
+                                    title: '<?php echo $reg->sport_name; ?>',
+                                }
+                            ]
+                        });
+
+                        // $('a.toggle-vis<?php echo $reg->id; ?>').on( 'click', function (e) {
+                        //     e.preventDefault();
+                            
+                        //     // Get the column API object
+                        //     var column = table<?php echo $reg->id; ?>.column( $(this).attr('data-column') );
+                    
+                        //     // Toggle the visibility
+                        //     column.visible( ! column.visible() );
+                        // } );
+                    <?php }} ?>
+
+                    <?php if(isset($search_list) && count($search_list) > 0){ foreach($search_list as $search){ ?>
+                        $('#sortTableSearch<?php echo $search->id; ?>').DataTable({
+                            dom: 'Bfrtip',
+                            buttons: [
+                                {
+                                    extend: 'csvHtml5',
+                                    title: '<?php echo $search->name; ?>',
+                                },
+                                {
+                                    extend: 'pdf',
+                                    title: '<?php echo $search->name; ?>',
+                                }
+                            ]
+                        });
+                    <?php }} ?>
                 </script>
 <?php include "template/footer.php"; ?>

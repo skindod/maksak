@@ -61,7 +61,9 @@
 		<link href="<?php echo base_url(); ?>asset/assets/css/maksakapp.css" rel="stylesheet" type="text/css" />
 
 		<!--end::Global Theme Styles -->
-
+		<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"> -->
+		<link href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css">
+		<link href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.bootstrap5.min.css" rel="stylesheet" type="text/css">
 		<!--begin::Layout Skins(used by all pages) -->
 
 		<!--end::Layout Skins -->

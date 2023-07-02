@@ -11,6 +11,7 @@ class Admins extends CI_Controller {
         
         //load the login model
         $this->load->model('admins_model');
+        $this->load->model('logs_model');
 
         $this->jompay = $this->load->database('default',TRUE);
         
@@ -112,5 +113,12 @@ class Admins extends CI_Controller {
                 redirect(base_url('admins/create'));
             }
         }
+    }
+
+    public function Logs()
+    {
+        $data['logs_list'] = $this->logs_model->get_list();
+        // echo '<pre>'; print_r($data['logs_list']); die();
+        $this->load->view('admins_logs', $data);
     }
 }

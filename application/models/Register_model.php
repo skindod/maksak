@@ -13,192 +13,112 @@ class register_model extends CI_Model {
         $this->db = $this->load->database('default', TRUE); 
     }
 
+    public function remove($register_id) {
+        $this->db->where('id', $register_id);
+        $this->db->delete('register');
+    }
+
     public function verify($event_id, $state_id, $sport_id, $ic, $jawatan) {
         
+        // check ic exist in system
         $this->db->from('players');
         $this->db->where('ic', $ic);
         $query = $this->db->get();
         $result = $query->result();
 
-        if(count($result) > 0){
-            
-            // calculate age
-            $d1 = new DateTime($result[0]->dob_year.'-'.$result[0]->dob_month.'-'.$result[0]->dob_day);
-            $d2 = new DateTime(date("Y-m-d"));
-            $diff = $d2->diff($d1);
-            $age = $diff->y;
+        if(count($result) == 0 || empty($result)){
+            return array('status' => false, 'msg' => 'Kad pengenalan tidak dijumpai. Sila daftar dahulu.');
+        }
 
-            // gender = 1 (male), gender = 2 (female)
-            $gender = $result[0]->sex;
+        // get event sports policy
+        $this->db->from('events_sports');
+        $this->db->where('event_id', $event_id);
+        $this->db->where('sport_id', $sport_id);
+        $query = $this->db->get();
+        $events_sports = $query->row();
 
-            // get event sports policy
-            $this->db->from('events_sports');
-            $this->db->where('event_id', $event_id);
-            $this->db->where('sport_id', $sport_id);
-            $query = $this->db->get();
-            $events_sports = $query->row();
+        // variables : calculate age
+        $d1 = new DateTime($result[0]->dob_year.'-'.$result[0]->dob_month.'-'.$result[0]->dob_day);
+        $d2 = new DateTime(date("Y-12-t"));
+        $diff = $d2->diff($d1);
+        $age = $diff->y;
 
-            // check veteran status
-            $veteran_status = 1;
-            if($age < $events_sports->veteran_age){
-                $veteran_status = 0;
+        // variables : gender = 1 (male), gender = 2 (female)
+        $gender = $result[0]->sex;
+
+        // variables : calculate tahun pemain kebangsaan (-2 years)
+        $tahun_pemain_kebangsaan = $gender = $result[0]->tahun_pemain_kebangsaan;
+        $limit_tahun_pemain_kebangsaan = date('Y') - 2;
+
+        // check veteran status
+        $veteran_status = 'veteran_check_true';
+        if($gender == 1){
+            if($age < $events_sports->veteran_age_male){
+                $veteran_status = 'veteran_check_false';
             }
+        }else{
+            if($age < $events_sports->veteran_age_female){
+                $veteran_status = 'veteran_check_false';
+            }
+        }
 
-            // check veteran/player limit
-            if($veteran_status == 1){
-                $this->db->from('register');
-                $this->db->where('event_id', $event_id);
-                $this->db->where('sport_id', $sport_id);
-                $this->db->where('badan_gabungan_id', $state_id);
-                $this->db->where('veteran_status', 1);
-                $query = $this->db->get();
-                $veteran_result = $query->result();
-
-                if(count($veteran_result) < $events_sports->veteran_num){
-                    $veteran_check = true;
-
-                    // check jawatan limit
+        // check jawatan limit
+        $this->db->from('register');
+        $this->db->where('event_id', $event_id);
+        $this->db->where('sport_id', $sport_id);
+        $this->db->where('badan_gabungan_id', $state_id);
+        $this->db->where('playing_position', $jawatan);
+        $query = $this->db->get();
+        $jawatan_result = $query->result();
+        
+        $jawatan_num = $jawatan."_num";
+        if($jawatan == 'pemain'){
+            
+            if(count($jawatan_result) < $events_sports->pemain_num){
+                // check kebangsaan limit
+                if($tahun_pemain_kebangsaan > (date('Y') -2)){
                     $this->db->from('register');
                     $this->db->where('event_id', $event_id);
                     $this->db->where('sport_id', $sport_id);
                     $this->db->where('badan_gabungan_id', $state_id);
+                    $this->db->where('tahun_pemain_kebangsaan >', $limit_tahun_pemain_kebangsaan);
                     $this->db->where('playing_position', $jawatan);
                     $query = $this->db->get();
-                    $jawatan_result = $query->result();
+                    $kebangsaan_result = $query->result();
 
-                    $all_check = false;
-                    if($jawatan == 'pengurus'){
-                        if(count($jawatan_result) < $events_sports->pengurus_num){
-                            $all_check = true;
-                        } else {
-                            return array('status' => false, 'msg' => 'Pengurus sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.');
-                        }
-                    } else if($jawatan == 'jurulatih'){
-                        if(count($jawatan_result) < $events_sports->jurulatih_num){
-                            $all_check = true;
-                        } else {
-                            return array('status' => false, 'msg' => 'Jurulatih sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.');
-                        }
-                    } else if($jawatan == 'pemain'){
-                        if(count($jawatan_result) < $events_sports->pemain_num){
-                            // check gender limit
-                            $this->db->from('register');
-                            $this->db->where('event_id', $event_id);
-                            $this->db->where('sport_id', $sport_id);
-                            $this->db->where('badan_gabungan_id', $state_id);
-                            $this->db->where('sex', $gender);
-                            $query = $this->db->get();
-                            $gender_result = $query->result();
-
-                            if($gender == 1){
-                                if(count($gender_result) < $events_sports->male_num){
-                                    $all_check = true;
-                                } else {
-                                    return array('status' => false, 'msg' => 'Pemain lelaki sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.');
-                                }
-                            } else {
-                                if(count($gender_result) < $events_sports->female_num){
-                                    $all_check = true;
-                                } else {
-                                    return array('status' => false, 'msg' => 'Pemain perempuan sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.');
-                                }
-                            }
-                            $all_check = true;
-                        } else {
-                            return array('status' => false, 'msg' => 'Pemain sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.');
-                        }
-                    } else if($jawatan == 'fisio'){
-                        if(count($jawatan_result) < $events_sports->fisio_num){
-                            $all_check = true;
-                        } else {
-                            return array('status' => false, 'msg' => 'Fisio sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.');
-                        }
-                    } else if($jawatan == 'kitman'){
-                        if(count($jawatan_result) < $events_sports->kitman_num){
-                            $all_check = true;
-                        } else {
-                            return array('status' => false, 'msg' => 'Kitman sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.');
-                        }
+                    if(count($kebangsaan_result) >= $events_sports->pemain_kebangsaan_num){
+                        return array('status' => false, 'msg' => 'Pemain kebangsaan sudah mencapai had bagi pasukan ini. Sila cuba lagi.');
                     }
-
-                    if($all_check == true){
-                        return array('status' => true, 'msg' => 'veteran_check_true', 'age' => $age);
-                    }
-                } else {
-                    return array('status' => false, 'msg' => 'Pemain veteran sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.'); 
                 }
-            } else {
-                
-                // check jawatan limit
+
+                // check gender limit
                 $this->db->from('register');
                 $this->db->where('event_id', $event_id);
                 $this->db->where('sport_id', $sport_id);
                 $this->db->where('badan_gabungan_id', $state_id);
+                $this->db->where('sex', $gender);
                 $this->db->where('playing_position', $jawatan);
                 $query = $this->db->get();
-                $jawatan_result = $query->result();
+                $gender_result = $query->result();
 
-                $all_check = false;
-                if($jawatan == 'pengurus'){
-                    if(count($jawatan_result) < $events_sports->pengurus_num){
-                        $all_check = true;
-                    } else {
-                        return array('status' => false, 'msg' => 'Pengurus sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.');
+                if($gender == 1){
+                    if(count($gender_result) >= $events_sports->male_num){
+                        return array('status' => false, 'msg' => 'Pemain lelaki sudah mencapai had bagi pasukan ini. Sila cuba lagi.');
                     }
-                } else if($jawatan == 'jurulatih'){
-                    if(count($jawatan_result) < $events_sports->jurulatih_num){
-                        $all_check = true;
-                    } else {
-                        return array('status' => false, 'msg' => 'Jurulatih sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.');
-                    }
-                } else if($jawatan == 'pemain'){
-                    if(count($jawatan_result) < $events_sports->pemain_num){
-                        // check gender limit
-                        $this->db->from('register');
-                        $this->db->where('event_id', $event_id);
-                        $this->db->where('sport_id', $sport_id);
-                        $this->db->where('badan_gabungan_id', $state_id);
-                        $this->db->where('sex', $gender);
-                        $query = $this->db->get();
-                        $gender_result = $query->result();
-
-                        if($gender == 1){
-                            if(count($gender_result) < $events_sports->male_num){
-                                $all_check = true;
-                            } else {
-                                return array('status' => false, 'msg' => 'Pemain lelaki sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.');
-                            }
-                        } else {
-                            if(count($gender_result) < $events_sports->female_num){
-                                $all_check = true;
-                            } else {
-                                return array('status' => false, 'msg' => 'Pemain perempuan sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.');
-                            }
-                        }
-                    } else {
-                        return array('status' => false, 'msg' => 'Pemain sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.');
-                    }
-                } else if($jawatan == 'fisio'){
-                    if(count($jawatan_result) < $events_sports->fisio_num){
-                        $all_check = true;
-                    } else {
-                        return array('status' => false, 'msg' => 'Fisio sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.');
-                    }
-                } else if($jawatan == 'kitman'){
-                    if(count($jawatan_result) < $events_sports->kitman_num){
-                        $all_check = true;
-                    } else {
-                        return array('status' => false, 'msg' => 'Kitman sudah mencapai had bagi pasukan ini. Sila daftar pemain lain.');
+                } else {
+                    if(count($gender_result) >= $events_sports->female_num){
+                        return array('status' => false, 'msg' => 'Pemain perempuan sudah mencapai had bagi pasukan ini. Sila cuba lagi.');
                     }
                 }
-
-                if($all_check == true){
-                    return array('status' => true, 'msg' => 'veteran_check_false', 'age' => $age);
-                }
+                
+            } else {
+                return array('status' => false, 'msg' => 'Pemain sudah mencapai had bagi pasukan ini. Sila cuba lagi.');
             }
-        } else {
-            return array('status' => false, 'msg' => 'Kad pengenalan tidak dijumpai. Sila daftar dahulu.'); 
+        } else if(count($jawatan_result) >= $events_sports->$jawatan_num){
+            return array('status' => false, 'msg' => ucfirst($jawatan).' sudah mencapai had bagi pasukan ini. Sila cuba lagi.');
         }
+
+        return array('status' => true, 'msg' => $veteran_status, 'age' => $age);
     }
     
     public function insert($event_id, $state_id, $sport_id, $ic, $jawatan, $veteran_status, $age) {
@@ -239,17 +159,21 @@ class register_model extends CI_Model {
             'registered_position' => $result[0]->position,
             'passport_pic' => $result[0]->passport_pic,
             'sah_surat_pelantikan' => $result[0]->sah_surat_pelantikan,
+            'surat_hrmis' => $result[0]->surat_hrmis,
+            'surat_pelantikan_terkini' => $result[0]->surat_pelantikan_terkini,
+            'surat_pelantikan_terdahulu' => $result[0]->surat_pelantikan_terdahulu,
             'kad_pengenalan' => $result[0]->kad_pengenalan,
             'penyata_gaji' => $result[0]->penyata_gaji,
             'caruman_kwsp' => $result[0]->caruman_kwsp,
             'surat_pengesahan_jabatan' => $result[0]->surat_pengesahan_jabatan,
+            'tahun_pemain_kebangsaan' => $result[0]->tahun_pemain_kebangsaan,
             'created_by' => $_SESSION['userid'],
             'created_date' => date('Y-m-d H:i:s')
         );
 
         $this->db->insert('register', $data);
 
-        return ($this->db->affected_rows() != 1) ? false : true;
+        return array('status' => ($this->db->affected_rows() != 1) ? false : true, 'player_id' => $result[0]->id);
     }
 
     public function get_search_list($event_id, $name, $state_id, $sport_id, $jawatan, $gender, $veteran_status)
@@ -260,13 +184,11 @@ class register_model extends CI_Model {
         }
         $query = $this->db->get();
         $states = $query->result();
-//        echo $sport_id; die();
+
         foreach($states as $state){
-            
-            $this->db->select('register.*');
-            $this->db->select('sports.name as sport_name');
+            $this->db->select('players.name, register.playing_position, register.age, register.sex, register.player_id, register.veteran_status, register.state_of_position, players.passport_pic, players.surat_pengesahan_jabatan, players.sah_surat_pelantikan, players.kad_pengenalan, players.penyata_gaji, players.caruman_kwsp, players.surat_hrmis, players.surat_pelantikan_terdahulu, players.surat_pelantikan_terkini');
+            $this->db->join('players', 'register.player_id = players.id', 'LEFT');
             $this->db->from('register');
-            $this->db->join('sports', 'register.sport_id = sports.id', 'LEFT');
             if($sport_id != '0'){
                 $this->db->where('register.sport_id', $sport_id);
             }
@@ -285,14 +207,29 @@ class register_model extends CI_Model {
             $this->db->where('register.event_id', $event_id);
             $this->db->where('register.badan_gabungan_id', $state->id);
             $this->db->order_by('register.sport_id', 'ASC');
+            $this->db->distinct('register.player_id');
             $query1 = $this->db->get();
             $result1 = $query1->result();
-//            echo '<pre>'; print_r($this->db->last_query()); die();
+           
             if(count($result1) > 0){
+                foreach($result1 as $res){
+                    // $this->db->select('register.name, register.playing_position, register.age, register.sex, register.player_id,');
+                    $this->db->select('sports.name as sport_name');
+                    $this->db->from('register');
+                    $this->db->join('sports', 'register.sport_id = sports.id', 'LEFT');
+                    if($sport_id != '0'){
+                        $this->db->where('register.sport_id', $sport_id);
+                    }
+                    $this->db->where('register.player_id', $res->player_id);
+                    $query2 = $this->db->get();
+                    $result2 = $query2->result();
+                    $res->sports = $query2->result();
+                }
+                
                 $state->data_list = $result1;
             }
         }
-        
+        // echo '<pre>'; print_r($states); die();
         return $states;
     }
     
@@ -308,10 +245,15 @@ class register_model extends CI_Model {
         
         foreach($sports as $sport){
             
-            $this->db->select('register.*');
+            $this->db->select('register.id, register.player_id, register.name, register.playing_position, register.age, register.veteran_status, register.sex, register.state_of_position');
             $this->db->select('sports.name as sport_name');
             $this->db->select('badan_gabungan.name as badan_gabungan_name');
+            $this->db->select('players.handicap_no');
+            $this->db->select('players.fide_id');
+            $this->db->select('players.nhs_id');
+            $this->db->select('players.passport_pic, players.surat_pengesahan_jabatan, players.sah_surat_pelantikan, players.kad_pengenalan, players.penyata_gaji, players.caruman_kwsp, players.surat_hrmis, players.surat_pelantikan_terdahulu, players.surat_pelantikan_terkini');
             $this->db->from('register');
+            $this->db->join('players', 'register.player_id = players.id');
             $this->db->join('sports', 'register.sport_id = sports.id', 'LEFT');
             $this->db->join('badan_gabungan', 'register.badan_gabungan_id = badan_gabungan.id', 'LEFT');
             if($sport->sport_id != 0){
@@ -330,7 +272,7 @@ class register_model extends CI_Model {
                 $sport->registered_list = array();
             }
         }
-//        echo '<pre>'; print_r($sports); die();
+        
         return $sports;
     }
 }

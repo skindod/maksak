@@ -25,7 +25,7 @@ class JointBodies extends CI_Controller {
 
     public function Create() {
         //set validations
-        $this->form_validation->set_rules("name", "name", "required");
+        // $this->form_validation->set_rules("name", "name", "required");
         $this->form_validation->set_rules("email", "email", "required");
         $this->form_validation->set_rules("state", "state", "required");
 
@@ -35,7 +35,7 @@ class JointBodies extends CI_Controller {
             $this->load->view('joint_bodies_create', $data);
         } else {
             //get the posted values
-            $name = $this->input->post("name");
+            // $name = $this->input->post("name");
             $email = $this->input->post("email");
             $state = $this->input->post("state");
             $phone = $this->input->post("phone");
@@ -43,7 +43,7 @@ class JointBodies extends CI_Controller {
             $result1 = $this->jointBodies_model->email_validation($email);
 
             if (count($result1) == 0) {
-                $result = $this->jointBodies_model->insert($name, $email, $state, $phone);
+                $result = $this->jointBodies_model->insert($email, $state, $phone);
 
                 if ($result != FALSE) {
 

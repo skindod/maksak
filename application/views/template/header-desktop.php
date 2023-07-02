@@ -33,7 +33,7 @@
                                         <a class="button-bottom" href="<?php echo base_url() . 'result/index/' . $event_now->id; ?>">
                                             <i class="flaticon2-calendar"></i>
                                         </a>
-                                        <a href="/dashboard-admin/event-detail.php">
+                                        <a href="<?php echo base_url() . 'result/index/' . $event_now->id; ?>">
                                             <h3><?php echo $event_now->name; ?></h3>
                                         </a>
                                         <span class="festive-date">
@@ -61,7 +61,7 @@
                                         <a class="button-single" href="<?php echo base_url() . 'events/details/' . $event_later->id; ?>">
                                             <i class="flaticon2-cup"></i>
                                         </a>
-                                        <a href="/dashboard-admin/event-detail.php">
+                                        <a href="<?php echo base_url() . 'events/details/' . $event_later->id; ?>">
                                             <h3><?php echo $event_later->name; ?></h3>
                                         </a>
                                         <span class="festive-date">
@@ -168,6 +168,52 @@
                                             <div class="kt-notification__item-details">
                                                 <div class="kt-notification__item-title">
                                                     Tambah admin baharu
+                                                </div>
+                                            </div>
+                                        </a>
+<?php } ?>
+<?php if ($_SESSION['role'] == 1) { ?>
+                                        <a href="/manual/MAKSAK laman_utama-manual.zip" target="_blank" class="kt-notification__item">
+                                            <div class="kt-notification__item-icon">
+                                                <i class="flaticon2-download kt-font-warning"></i>
+                                            </div>
+                                            <div class="kt-notification__item-details">
+                                                <div class="kt-notification__item-title">
+                                                    Muat turun manual laman utama
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <a href="/manual/MAKSAK MGAMESLINK MODUL LATIHAN - WebAdmin.pdf" target="_blank" class="kt-notification__item">
+                                            <div class="kt-notification__item-icon">
+                                                <i class="flaticon2-download kt-font-warning"></i>
+                                            </div>
+                                            <div class="kt-notification__item-details">
+                                                <div class="kt-notification__item-title">
+                                                    Muat turun manual laman aplikasi
+                                                </div>
+                                            </div>
+                                        </a>
+<?php } ?>
+<?php if ($_SESSION['role'] == 2) { ?>
+                                        <a href="/manual/MAKSAK MGAMESLINK MODUL LATIHAN - Badan Gabungan.pdf" target="_blank" class="kt-notification__item">
+                                            <div class="kt-notification__item-icon">
+                                                <i class="flaticon2-download kt-font-warning"></i>
+                                            </div>
+                                            <div class="kt-notification__item-details">
+                                                <div class="kt-notification__item-title">
+                                                    Muat turun manual laman aplikasi
+                                                </div>
+                                            </div>
+                                        </a>
+<?php } ?>
+<?php if ($_SESSION['role'] == 0) { ?>
+                                        <a href="<?php echo base_url(); ?>admins/logs" class="kt-notification__item">
+                                            <div class="kt-notification__item-icon">
+                                                <i class="flaticon2-list-1 kt-font-warning"></i>
+                                            </div>
+                                            <div class="kt-notification__item-details">
+                                                <div class="kt-notification__item-title">
+                                                    Aktiviti Catatan
                                                 </div>
                                             </div>
                                         </a>

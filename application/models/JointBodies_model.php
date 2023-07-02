@@ -11,12 +11,12 @@ class jointBodies_model extends CI_Model
         $this->db = $this->load->database('default',TRUE);
     }
 
-    public function insert($name, $email, $state, $phone)
+    public function insert($email, $state, $phone)
     {
         $password = $this->randomPassword();
         
         $data = array(
-            'name' => $name,
+            // 'name' => $name,
             'email' => $email,
             'password' => $password,
             'badan_gabungan_id' => $state,

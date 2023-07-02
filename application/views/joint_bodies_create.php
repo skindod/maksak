@@ -64,10 +64,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group">
+                                                        <!-- <div class="form-group">
                                                             <label>Nama</label>
                                                             <input type="text" class="form-control" name="name" required="">
-                                                        </div>
+                                                        </div> -->
                                                         <div class="form-group">
                                                             <label>E-mel</label>
                                                             <input type="email" class="form-control" name="email" aria-describedby="emailHelp" required="" placeholder="Masukkan e-mel untuk kegunaan log masuk ke dashboard">
@@ -119,7 +119,7 @@
                                                             <thead>
                                                                     <tr>
                                                                             <td style=" width: 30%;">Badan Gabungan</td>
-                                                                            <td style=" width: 30%;">Nama</td>
+                                                                            <td style=" width: 30%;">Status</td>
                                                                             <td style=" width: 30%;">E-mel Pengurus</td>
                                                                             <td style=" width: 10%;">Kemaskini</td>
                                                                     </tr>
@@ -132,7 +132,6 @@
                                                                     </td>
                                                                     <td>
                                                                         <span class="kt-widget11__title">
-                                                                            <?php echo $bodies->name; ?>
                                                                             <?php if($bodies->status == 1){ ?>
                                                                             <br><span class="kt-badge kt-badge--success kt-badge--inline" style="color: #FFF !important;">Aktif</span>
                                                                             <?php }else{ ?>

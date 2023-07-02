@@ -14,6 +14,7 @@ class Welcome extends CI_Controller {
         //load the login model
         $this->load->model('login_model');
         $this->load->model('events_model');
+        $this->load->model('logs_model');
     }
 
     public function Index() {
@@ -28,11 +29,17 @@ class Welcome extends CI_Controller {
             $email = $this->input->post("email");
             $password = $this->input->post("password");
 
+            $request = array(
+                'email' => $email,
+                'password' => $password,
+            );
+            
             $result = $this->login_model->login($email, $password);
             
             if ($result != FALSE) {
 
                 $current_events = $this->events_model->get_current_events();
+                $this->logs_model->insert($result[0]->badan_gabungan_id, 0, 0, 0, 'Login', $result[0]->id, $request, array('login success'));
                 
                 $session = array(
                     'login' => true,
@@ -48,6 +55,7 @@ class Welcome extends CI_Controller {
                 
                 redirect(base_url('dashboard/index'));
             } else {
+                $this->logs_model->insert($result[0]->badan_gabungan_id, 0, 0, 0, 'Login', $result[0]->id, $request, array('Salah kata laluan atau email. Sila cuba lagi.'));
                 $session = array(
                     'msgstatus' => 0,
                     'msg' => 'Salah kata laluan atau email. Sila cuba lagi.'

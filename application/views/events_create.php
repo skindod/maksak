@@ -253,18 +253,29 @@
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
                                                                                 </div>
-                                                                                <div class="col-md-3">
+                                                                                <div class="col-md-2">
                                                                                     <div class="kt-form__group--inline">
                                                                                         <div class="kt-form__label">
-                                                                                            <label class="kt-label m-label--single">Umur veteran</label>
+                                                                                            <label class="kt-label m-label--single">Umur veteran lelaki</label>
                                                                                         </div>
                                                                                         <div class="kt-form__control">
-                                                                                            <input type="number" name="veteran_age" class="form-control">
+                                                                                            <input type="number" name="veteran_age_male" class="form-control">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
                                                                                 </div>
-                                                                                <div class="col-md-3">
+                                                                                <div class="col-md-2">
+                                                                                    <div class="kt-form__group--inline">
+                                                                                        <div class="kt-form__label">
+                                                                                            <label class="kt-label m-label--single">Umur veteran perempuan</label>
+                                                                                        </div>
+                                                                                        <div class="kt-form__control">
+                                                                                            <input type="number" name="veteran_age_female" class="form-control">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="d-md-none kt-margin-b-10"></div>
+                                                                                </div>
+                                                                                <div class="col-md-2">
                                                                                     <div class="kt-form__group--inline">
                                                                                         <div class="kt-form__label">
                                                                                             <label class="kt-label m-label--single">Bilangan veteran</label>
@@ -340,6 +351,17 @@
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>
                                                                                 </div>
+                                                                                <div class="col-md-6">
+                                                                                    <div class="kt-form__group--inline">
+                                                                                        <div class="kt-form__label">
+                                                                                            <label class="kt-label m-label--single">Pemain Kebangsaan</label>
+                                                                                        </div>
+                                                                                        <div class="kt-form__control col-6">
+                                                                                            <input type="number" name="pemain_kebangsaan_num" class="form-control">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="d-md-none kt-margin-b-10"></div>
+                                                                                </div>
                                                                                 <div class="col-md-2">
                                                                                     <div class="kt-form__group--inline">
                                                                                         <div class="kt-form__label">
@@ -358,6 +380,17 @@
                                                                                         </div>
                                                                                         <div class="kt-form__control">
                                                                                             <input type="number" name="kitman_num" class="form-control">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="d-md-none kt-margin-b-10"></div>
+                                                                                </div>
+                                                                                <div class="col-md-2">
+                                                                                    <div class="kt-form__group--inline">
+                                                                                        <div class="kt-form__label">
+                                                                                            <label class="kt-label m-label--single">Koreografer</label>
+                                                                                        </div>
+                                                                                        <div class="kt-form__control">
+                                                                                            <input type="number" name="koreografer_num" class="form-control">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="d-md-none kt-margin-b-10"></div>

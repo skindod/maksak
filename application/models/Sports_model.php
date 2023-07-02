@@ -69,4 +69,14 @@ class sports_model extends CI_Model
         return $query->row();
     }
     
+    function get_dashboard_data()
+    {
+        $return = array();
+
+        $this->db->from('sports');
+        $query = $this->db->get();
+        $return['all'] = $query->num_rows();
+
+        return $return;
+    }
 }?>

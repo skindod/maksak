@@ -19,6 +19,14 @@ class grade_model extends CI_Model
         
         return $result;
     }
+
+    function get_by_id($id)
+    {
+        $this->db->from('grade');
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
     
     function get_data($id)
     {
