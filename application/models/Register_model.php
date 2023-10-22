@@ -47,7 +47,7 @@ class register_model extends CI_Model {
         $gender = $result[0]->sex;
 
         // variables : calculate tahun pemain kebangsaan (-2 years)
-        $tahun_pemain_kebangsaan = $gender = $result[0]->tahun_pemain_kebangsaan;
+        $tahun_pemain_kebangsaan = $result[0]->tahun_pemain_kebangsaan;
         $limit_tahun_pemain_kebangsaan = date('Y') - 2;
 
         // check veteran status

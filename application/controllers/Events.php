@@ -21,7 +21,13 @@ class Events extends CI_Controller {
     
     public function Index()
     {
-        $data['events_list'] = $this->events_model->get_list();
+        $year = $this->input->get('year');
+        if(empty($year))
+        {
+            $year = date('Y');
+        }
+        $data['events_list'] = $this->events_model->get_list($year);
+        $data['selectYear'] = $year;
         
         $this->load->view('events_list', $data);
     }

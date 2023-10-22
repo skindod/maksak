@@ -342,11 +342,15 @@ class events_model extends CI_Model {
         return;
     }
 
-    function get_list() {
+    function get_list($year = '') {
         $this->db->select('events.*');
         $this->db->from('events');
+        $this->db->join('events_location', 'events.id = events_location.event_id');
         if(isset($_SESSION['role']) && $_SESSION['role'] == 2){
             $this->db->where('publish_status', 1);
+        }
+        if(!empty($year)){
+            $this->db->where('YEAR(events_location.date_from)', $year);
         }
         $this->db->order_by('id', 'desc');
         $query = $this->db->get();

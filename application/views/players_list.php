@@ -48,7 +48,7 @@
                                                                 <div class="row align-items-center" style="margin-bottom: 20px;">
                                                                     <div class="col-md-11 kt-margin-b-20-tablet-and-mobile">
                                                                         <div class="kt-input-icon kt-input-icon--left">
-                                                                            <input type="text" class="form-control" placeholder="IC pemain (cth: 900111551234)" name="ic" id="generalSearch" required="">
+                                                                            <input type="text" class="form-control" placeholder="IC atau Nama pemain (cth: 900111551234, adam)" name="ic" id="generalSearch" required="">
                                                                             <span class="kt-input-icon__icon kt-input-icon__icon--left">
                                                                                 <span><i class="la la-search"></i></span>
                                                                             </span>
@@ -68,7 +68,7 @@
                                                     <div style="padding: 20px;">
                                                         <div class="accordion accordion-solid accordion-toggle-plus" id="accordionBox">
                                                         <!--begin::Accordion-->
-                                                        <?php if(isset($player) && is_object($player)){ ?>
+                                                        <?php if(isset($player) && count($player)>0){  ?>
                                                             <div class="card-body">
                                                                 <div class="kt-portlet__body">
                                                                     <!--begin::Section-->
@@ -84,21 +84,23 @@
                                                                                     <th>Kemaskini</th>
                                                                                 </thead>
                                                                                 <tbody>
+                                                                                    <?php foreach($player as $play){ ?>
                                                                                     <tr>
                                                                                         <td>
-                                                                                            <a target="_blank" href="<?php $pic = 'default_avatar.jpeg'; if(!empty($player->passport_pic)){ $pic = $player->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>"><img class="kt-hidden-" style="width: 25px; height: 25px;" alt="Pic" src="<?php $pic = 'default_avatar.jpeg'; if(!empty($player->passport_pic)){ $pic = $player->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>" /></a>
-                                                                                            <?php echo strtoupper($player->name); ?>
+                                                                                            <a target="_blank" href="<?php $pic = 'default_avatar.jpeg'; if(!empty($play->passport_pic)){ $pic = $play->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>"><img class="kt-hidden-" style="width: 25px; height: 25px;" alt="Pic" src="<?php $pic = 'default_avatar.jpeg'; if(!empty($play->passport_pic)){ $pic = $play->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>" /></a>
+                                                                                            <?php echo strtoupper($play->name); ?>
                                                                                         </td>
-                                                                                        <td><?php echo $player->email; ?></td>
-                                                                                        <td><?php echo $player->dob_day.'-'.$player->dob_month.'-'.$player->dob_year; ?></td>
-                                                                                        <td><?php if($player->sex == 1){ echo 'Lelaki'; }else{ echo 'Perempuan'; } ?></td>
-                                                                                        <td><?php echo ucfirst($player->state_of_position); ?></td>
+                                                                                        <td><?php echo $play->email; ?></td>
+                                                                                        <td><?php echo $play->dob_day.'-'.$play->dob_month.'-'.$play->dob_year; ?></td>
+                                                                                        <td><?php if($play->sex == 1){ echo 'Lelaki'; }else{ echo 'Perempuan'; } ?></td>
+                                                                                        <td><?php echo ucfirst($play->state_of_position); ?></td>
                                                                                         <td>
-                                                                                            <a href="<?php echo base_url().'players/update/'.$player->id; ?>" class="btn kt-subheader__btn-primary btn-icon" target="_blank">
+                                                                                            <a href="<?php echo base_url().'players/update/'.$play->id; ?>" class="btn kt-subheader__btn-primary btn-icon" target="_blank">
                                                                                                 <i class="flaticon2-edit"></i>
                                                                                             </a>
                                                                                         </td>
                                                                                     </tr>
+                                                                                    <?php } ?>
                                                                                 </tbody>
                                                                             </table>
                                                                         </div>
@@ -113,66 +115,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!--End::Section-->
-                                    <!--Begin::Section-->
-                                    <!-- <div class="row">
-                                        <div class="col-xl-12">
-                                            <div class="kt-portlet kt-portlet--mobile">
-                                                <div class="kt-portlet__head kt-portlet__head--lg">
-                                                    <div class="kt-portlet__head-label">
-                                                        <h3 class="kt-portlet__head-title">
-                                                            Senarai pemain baru daftar
-                                                        </h3>
-                                                    </div>
-                                                </div>
-                                                <div class="kt-portlet__body kt-portlet__body--fit">
-                                                    <div style="padding: 20px;">
-                                                        <div class="accordion accordion-solid accordion-toggle-plus" id="accordionBox">
-                                                            <div class="card-body">
-                                                                <div class="kt-portlet__body">
-                                                                    <div class="kt-section">
-                                                                        <div class="kt-section__content">
-                                                                            <table class="table table-striped sortTable">
-                                                                                <thead>
-                                                                                    <th>Nama</th>
-                                                                                    <th>Badan Gabungan</th>
-                                                                                    <th>Email</th>
-                                                                                    <th>Tarikh Lahir</th>
-                                                                                    <th>Jantina</th>
-                                                                                    <th>Taraf Jawatan</th>
-                                                                                    <th>Kemaskini</th>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    <?php if(isset($players_list) && count($players_list) > 0){ foreach($players_list as $player){ ?>
-                                                                                    <tr>
-                                                                                        <td>
-                                                                                            <a target="_blank" href="<?php $pic = 'default_avatar.jpeg'; if(!empty($player->passport_pic)){ $pic = $player->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>"><img class="kt-hidden-" style="width: 25px; height: 25px;" alt="Pic" src="<?php $pic = 'default_avatar.jpeg'; if(!empty($player->passport_pic)){ $pic = $player->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>" /></a>
-                                                                                            <a target="_blank" href="/players/details?id=<?php echo $player->id; ?>"><?php echo strtoupper($player->name); ?></a>
-                                                                                        </td>
-                                                                                        <td><?php echo $player->badan_name; ?></td>
-                                                                                        <td><?php echo $player->email; ?></td>
-                                                                                        <td><?php echo $player->dob_day.'-'.$player->dob_month.'-'.$player->dob_year; ?></td>
-                                                                                        <td><?php if($player->sex == 1){ echo 'Lelaki'; }else{ echo 'Perempuan'; } ?></td>
-                                                                                        <td><?php echo ucfirst($player->state_of_position); ?></td>
-                                                                                        <td>
-                                                                                            <a href="<?php echo base_url().'players/update/'.$player->id; ?>" class="btn kt-subheader__btn-primary btn-icon" target="_blank">
-                                                                                                <i class="flaticon2-edit"></i>
-                                                                                            </a>
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                    <?php } } ?>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                     <!--End::Section-->
 				</div>
                                 <!-- end:: Content -->

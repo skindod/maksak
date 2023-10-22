@@ -24,8 +24,13 @@
                             <div class="kt-subheader   kt-grid__item" id="kt_subheader">
                                 <div class="kt-subheader__main">
                                     <h3 class="kt-subheader__title">Senarai Kejohanan</h3>
-<!--                                    <span class="kt-subheader__separator kt-subheader__separator--v"></span>
-                                    <span class="kt-subheader__desc">Senarai event</span>-->
+                                    <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                                    <span class="kt-subheader__desc">Data tahun</span>
+                                    <select id="selectYear" onchange="changeYear()">
+                                        <?php for($a = date('Y'); $a > 2020; $a--){ ?>
+                                            <option value="<?php echo $a; ?>" <?php if($a == $selectYear){ echo 'selected'; } ?>><?php echo $a; ?></option>
+                                        <?php } ?>
+                                    </select>
                                 </div>
                                 <div class="kt-subheader__toolbar">
                                     <div class="kt-subheader__wrapper">
@@ -223,6 +228,13 @@
 
 <?php include "template/global-script.php"; ?>
 
+<script language = "JavaScript">
+    function changeYear() {
+        var year = document.getElementById("selectYear").value;
+        location.replace("/events?year="+year);
+    }
+</script>
+
                 <!--begin::Page Vendors(used by this page) -->
                 <script src="<?php echo base_url(); ?>asset/assets/vendors/custom/fullcalendar/fullcalendar.bundle.js" type="text/javascript"></script>
                 <script src="//maps.google.com/maps/api/js?key=AIzaSyBTGnKT7dt597vo9QgeQ7BFhvSRP4eiMSM" type="text/javascript"></script>
@@ -230,6 +242,7 @@
                 <!--end::Page Vendors -->
 
                 <!--begin::Page Scripts(used by this page) -->
+                
                 <!--end::Page Scripts -->
 
 <?php include "template/footer.php"; ?>

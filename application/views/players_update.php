@@ -280,6 +280,11 @@
                                                                         <i class="flaticon-file-2" data-toggle="kt-popover" data-placement="top" data-content="Laporan Profil Perkhidmatan Semasa Hrmis / MyTentera / BAT C 20 / BAT C 10"></i>
                                                                     </a>
                                                                 <?php } ?>
+                                                                <!-- <?php if($player->surat_hrmis != ''){ ?>
+                                                                    <a onclick="addWatermark('<?php echo base_url().'images/surat_hrmis/'.$player->surat_hrmis; ?>')" target="_blank">
+                                                                        <i class="flaticon-file-2" data-toggle="kt-popover" data-placement="top" data-content="Laporan Profil Perkhidmatan Semasa Hrmis / MyTentera / BAT C 20 / BAT C 10"></i>
+                                                                    </a>
+                                                                <?php } ?> -->
                                                                 <?php if($player->surat_pelantikan_terdahulu != ''){ ?>
                                                                     <a href="<?php echo base_url().'images/surat_pelantikan_terdahulu/'.$player->surat_pelantikan_terdahulu; ?>" target="_blank">
                                                                         <i class="flaticon-file-2" data-toggle="kt-popover" data-placement="top" data-content="Surat pelantikan terdahulu"></i>
@@ -869,4 +874,43 @@
                     //         }
                     //     }
                     // }
+
+                    // Function to add watermark to an image
+                    function addWatermark(imageUrl) {
+                        const watermarkText = "KEGUNAAN MAKSAK SAHAJA";
+
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+
+                        const image = new Image();
+                        image.crossOrigin = 'Anonymous';
+                        image.src = imageUrl;
+
+                        image.onload = function() {
+                            canvas.width = image.width;
+                            canvas.height = image.height;
+
+                            ctx.drawImage(image, 0, 0);
+                            ctx.font = '25px Arial';
+                            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                            ctx.fillText(watermarkText, 10, image.height - 10);
+
+                            const watermarkedImageUrl = canvas.toDataURL('image/png');
+
+                            const link = document.createElement('a');
+                            link.href = watermarkedImageUrl;
+                            link.download = 'watermarked_image.png';
+                            link.innerHTML = '<img src="' + watermarkedImageUrl + '" alt="Watermarked Image">';
+                            
+                            // const watermarkedImagesDiv = document.getElementById('watermarkedImages');
+                            // watermarkedImagesDiv.appendChild(link);
+
+                            const link1 = document.createElement('a');
+                            link1.href = link;
+                            link1.download = '';
+                            document.body.appendChild(link1);
+                            link1.click();
+                            document.body.removeChild(link1);
+                        };
+                    }
                 </script>

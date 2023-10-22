@@ -671,7 +671,7 @@ class players_model extends CI_Model
                 }
             }
         }
-
+        
         $surat_pelantikan_terdahulu = '';
         if (isset($_FILES['surat_pelantikan_terdahulu'])) {
             
@@ -753,7 +753,7 @@ class players_model extends CI_Model
                 }
             }
         }
-
+        // echo 'in!<br>'; 
         $surat_hrmis = '';
         if (isset($_FILES['surat_hrmis'])) {
             $check = $_FILES['surat_hrmis']['name'];
@@ -788,7 +788,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/surat_hrmis';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 4000;
                     $config['file_name'] = $surat_hrmis;
                     
                     $this->load->library('upload', $config);
@@ -808,7 +808,7 @@ class players_model extends CI_Model
                 }
             }
         }
-        
+        // echo 'out!<br>'; die();
         $kad_pengenalan = '';
         if (isset($_FILES['kad_pengenalan'])) {
             $check = $_FILES['kad_pengenalan']['name'];
@@ -998,9 +998,10 @@ class players_model extends CI_Model
     function get_search_list($ic)
     {
         $this->db->from('players');
-        $this->db->where('ic', $ic);
+        $this->db->like('ic', $ic);
+        $this->db->or_like('name', $ic);
         $query = $this->db->get();
-        return $query->row();
+        return $query->result();
     }
     
     function get_list()

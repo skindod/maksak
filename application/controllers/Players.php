@@ -232,7 +232,8 @@ class Players extends CI_Controller {
         $ic = $this->input->post("ic");
         
         $data['player'] = $this->players_model->get_search_list($ic);
-        $data['players_list'] = $this->players_model->get_latest_players_list();
+        // echo '<pre>'; print_r($data['player']); die();
+        // $data['players_list'] = $this->players_model->get_latest_players_list();
         
 
         $this->load->view('players_list', $data);
