@@ -104,9 +104,9 @@
                                                             <div class="form-group">
                                                                 <label>Pilih badan gabungan</label>
                                                                 <select class="form-control selectpicker" name="state[]">
-                                                                    <?php foreach($badan_gabungan_list as $bg){ ?>
-                                                                        <option value="<?php echo $bg->id; ?>" <?php if(isset($search_details[0])){ if($search_details[0]->state_id == $bg->id){ echo 'selected'; } } ?>><?php echo $bg->name; ?></option>
-                                                                    <?php } ?>
+                                                                    <?php foreach($badan_gabungan_list as $bg){ if($bg->id != 18){ ?>
+                                                                        <option value="<?php echo $bg->id; ?>" <?php if(isset($search_details[0])){ if($search_details[0]->state_id == $bg->id){ echo 'selected'; }}else if($bg->id == 1){ echo 'selected'; } ?>><?php echo $bg->name; ?></option>
+                                                                    <?php }} ?>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -114,30 +114,31 @@
                                                             <div class="form-group">
                                                                 <label>Pilih status keputusan</label>
                                                                 <select class="form-control selectpicker" name="point[]">
-                                                                    <?php foreach($points_list as $point){ ?>
+                                                                <?php $event_sports_category = 'single'; if(isset($_SESSION['event_sports_category']) && $_SESSION['event_sports_category'] == 'team'){ $event_sports_category = 'team'; } ?>
+                                                                    <?php foreach($points_list as $point){ if($point->category == $event_sports_category){ ?>
                                                                         <option value="<?php echo $point->id; ?>" <?php if(isset($search_details[0])){ if($search_details[0]->point_id == $point->id){ echo 'selected'; } } ?>><?php echo $point->name.' ('.$point->point.'pt)'; ?></option>
-                                                                    <?php } ?>
+                                                                    <?php } } ?>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <?php for($num = 1; $num < 18; $num++){ ?>
+                                                    <?php $selected_bg_id = 2; for($num = 1; $num < 18; $num++){ ?>
                                                         <div class="row" style="margin-top: -15px;">
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
                                                                     <select class="form-control selectpicker" name="state[]">
-                                                                        <?php foreach($badan_gabungan_list as $bg){ ?>
-                                                                            <option value="<?php echo $bg->id; ?>" <?php if(isset($search_details[$num])){ if($search_details[$num]->state_id == $bg->id){ echo 'selected'; } } ?>><?php echo $bg->name; ?></option>
-                                                                        <?php } ?>
+                                                                        <?php foreach($badan_gabungan_list as $bg){ if($bg->id != 18){ ?>
+                                                                            <option value="<?php echo $bg->id; ?>" <?php if(isset($search_details[$num])){ if($search_details[$num]->state_id == $bg->id){ echo 'selected'; } }else if($bg->id == $selected_bg_id){ echo 'selected'; $selected_bg_id++; if($selected_bg_id == 18){ $selected_bg_id++; } } ?>><?php echo $bg->name; ?></option>
+                                                                        <?php }} ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <div class="form-group">
                                                                     <select class="form-control selectpicker" name="point[]">
-                                                                        <?php foreach($points_list as $point){ ?>
+                                                                        <?php foreach($points_list as $point){ if($point->category == $event_sports_category){ ?>
                                                                             <option value="<?php echo $point->id; ?>" <?php if(isset($search_details[$num])){ if($search_details[$num]->point_id == $point->id){ echo 'selected'; } } ?>><?php echo $point->name.' ('.$point->point.'pt)'; ?></option>
-                                                                        <?php } ?>
+                                                                        <?php } } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>

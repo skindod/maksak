@@ -75,9 +75,9 @@ $query_builder = TRUE;
 
 $db['default'] = array( 
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'maksakgo_mgames',
-	'password' => ']if{24M,+CEz',
+	'hostname' => '127.0.0.1',
+	'username' => 'maksak',
+	'password' => 'M@kS@k2024',
 	'database' => 'maksakgo_mgames', 
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

@@ -211,7 +211,7 @@
                                                                     <div class="form-group form-group-last row" id="kt_repeater_1">
                                                                         <div data-repeater-list="" class="col-lg-12" >
                                                                             <div data-repeater-item class="form-group row align-items-center" style="margin-top:20px !important; background-color: #F4F6F9; border-radius: 5px; padding: 15px;">
-                                                                                <div class="col-md-10">
+                                                                                <div class="col-md-6">
                                                                                     <div class="kt-form__group--inline">
                                                                                         <div class="kt-form__label">
                                                                                             <label >Nama acara</label>
@@ -222,6 +222,20 @@
                                                                                                 <?php if(count($sports_list) > 0){ foreach($sports_list as $sport){ ?>
                                                                                                     <option value="<?php echo $sport->id; ?>"><?php echo $sport->name; ?></option>
                                                                                                 <?php }} ?>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="d-md-none kt-margin-b-10"></div>
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    <div class="kt-form__group--inline">
+                                                                                        <div class="kt-form__label">
+                                                                                            <label >Kategori</label>
+                                                                                        </div>
+                                                                                        <div class="kt-form__control">
+                                                                                            <select name="acara_kategori" class="form-control" required="">
+                                                                                                <option value="single">Single</option>
+                                                                                                <option value="team">Team</option>
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>

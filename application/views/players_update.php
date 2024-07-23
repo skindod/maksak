@@ -492,9 +492,9 @@
                                                         <div class="col-sm-4">
                                                             <label>Handikap</label>
                                                             <select name="handicap_no" class="form-control selectpicker">
-                                                                <option value="">Sila pilih</option>
+                                                                <option value="" <?php if($player->handicap_no == ''){ echo 'selected'; } ?>>Sila pilih</option>
                                                                 <?php for($a=0; $a<25; $a++){ ?>
-                                                                    <option value="<?php echo $a; ?>" <?php if($player->handicap_no == $a){ echo 'selected'; } ?>><?php echo $a; ?></option>
+                                                                    <option value="<?php echo $a; ?>" <?php if($player->handicap_no != '' && $player->handicap_no == $a){ echo 'selected'; } ?>><?php echo $a; ?></option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>

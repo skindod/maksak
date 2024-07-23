@@ -163,7 +163,10 @@
                                                         <?php } else if($player->state_of_position == 'sementara'){ ?>
                                                             Sementara 
                                                             <?php if(isset($_SESSION['login'])){ ?>
-                                                                <a href="<?php echo base_url().'images/surat_pengesahan_jabatan/'.$player->surat_pengesahan_jabatan; ?>" target="_blank" data-toggle="tooltip" title="Surat pengesahan jabatan"><i class="flaticon2-file-1"></i></a>
+                                                                <a href="<?php echo base_url().'images/sah_surat_pelantikan/'.$player->sah_surat_pelantikan; ?>" target="_blank" data-toggle="tooltip" title="Sah surat pelantikan"><i class="flaticon2-file-1"></i></a>
+                                                                <a href="<?php echo base_url().'images/kad_pengenalan/'.$player->kad_pengenalan; ?>" target="_blank" data-toggle="tooltip" title="Kad pengenalan"><i class="flaticon2-file-1"></i></a>
+                                                                <a href="<?php echo base_url().'images/penyata_gaji/'.$player->penyata_gaji; ?>" target="_blank" data-toggle="tooltip" title="Penyata gaji"><i class="flaticon2-file-1"></i></a>
+                                                                <a href="<?php echo base_url().'images/caruman_kwsp/'.$player->caruman_kwsp; ?>" target="_blank" data-toggle="tooltip" title="Caruman KWSP"><i class="flaticon2-file-1"></i></a>
                                                             <?php } ?>
                                                         <?php } else if($player->state_of_position == 'contract of service'){ ?>
                                                             Contract of Service 

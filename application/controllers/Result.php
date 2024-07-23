@@ -39,7 +39,7 @@ class Result extends CI_Controller {
         $data['result_per_state_list'] = $this->result_model->get_list_per_state($event_id);
         $data['event_id'] = $event_id;
         $data['badan_gabungan_list'] = $this->badanGabungan_model->get_list();
-//        echo '<pre>';        print_r($data['points_list']); die();
+    //    echo '<pre>';        print_r($_SESSION); die();
         if(isset($_SESSION['search_event_id']) && isset($_SESSION['search_sport_id'])){
             $data['search_details'] = $this->result_model->get_search_list($_SESSION['search_event_id'], $_SESSION['search_sport_id']);
         }
@@ -80,13 +80,18 @@ class Result extends CI_Controller {
         }
     }
     
-    public function Search($event_id, $sport_id)
+    public function Search($event_id, $sport_id = 0)
     {
-        $session = array(
-            'search_event_id' => $event_id,
-            'search_sport_id' => $sport_id
-        );
-        $this->session->set_userdata($session);
+        if($sport_id != 0){
+            $data = $this->events_model->get_event_sports_category_by_event_id_and_sport_id($event_id, $sport_id);
+            // echo '<pre>';        print_r($data); die();
+            $session = array(
+                'search_event_id' => $event_id,
+                'search_sport_id' => $sport_id,
+                'event_sports_category' => $data[0]->event_sports_category
+            );
+            $this->session->set_userdata($session);
+        }
 
         redirect(base_url('result/index/'.$event_id));
     }

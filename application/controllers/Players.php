@@ -271,6 +271,7 @@ class Players extends CI_Controller {
             $data['grades'] = $this->grade_model->get_list();
             $data['player'] = $this->players_model->get_player_data($id);
             $data['badan_gabungan_list'] = $this->badanGabungan_model->get_list();
+            // echo '<pre>'; print_r($data['player']); die();
             $this->load->view('players_update', $data);
         } else {
              //get the posted values

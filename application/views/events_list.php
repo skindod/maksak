@@ -158,6 +158,13 @@
                                                                             echo $from.' - '.$to;
                                                                         ?>
                                                                     </a>
+                                                                    <a>
+                                                                        <i class="flaticon2-calendar-3"></i> Tarikh tutup pendaftaran : 
+                                                                        <?php 
+                                                                            $last = date("d F Y", strtotime($event->location[0]->last_registration_date));
+                                                                            echo $last;
+                                                                        ?>
+                                                                    </a>
                                                                 </div>
                                                                 <div class="kt-widget__info">
                                                                     <div class="kt-widget__desc">

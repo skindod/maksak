@@ -9,7 +9,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js"></script>
 
 <!-- begin::Body -->
 <body class="kt-page--fixed kt-page-content-white kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header-mobile--fixed kt-subheader--enabled kt-subheader--transparent kt-page--loading">
@@ -55,7 +56,7 @@
 
                                 <!--Begin::Section-->
                                 <div class="row">
-                                    <div class="col-6 p-0 m-0">
+                                    <div class="col-12 col-md-6 p-0 m-0">
                                         <div class="col-12 m-0">
                                             <!--begin:: Widgets/daftar ahli-->
                                             <div class="kt-portlet kt-portlet--height-fluid">
@@ -137,17 +138,17 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-12 col-md-6 p-0 m-0">
                                         <div class="col-12">
                                             <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
                                                 <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
                                                     <div class="kt-portlet__head-label">
                                                         <h3 class="kt-portlet__head-title">
-                                                            Jadual kejohanan <?php echo $selectYear; ?> (under construction)
+                                                            Jadual kejohanan <?php echo $selectYear; ?>
                                                         </h3>
                                                     </div>
                                                 </div>
-                                                <div class="kt-portlet__body kt-portlet__body--fit">
+                                                <div class="kt-portlet__body kt-portlet__body--fit p-4">
                                                     <div id="calendar"></div>
                                                 </div>
                                             </div>
@@ -209,11 +210,64 @@
                     </div>
                 </div>
 
+                <!-- Modal -->
+                <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="eventModalBody">
+                            <!-- Event details will be displayed here -->
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
 <?php include "template/footer-page.php"; ?>		
 
 <?php include "template/global-script.php"; ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="<?php echo base_url(); ?>asset/assets/vendors/custom/fullcalendar/fullcalendar.bundle.js" type="text/javascript"></script>
+
 
 <script language = "JavaScript">
+    $(document).ready(function() {
+        $('#calendar').fullCalendar({
+            initialView: 'dayGridMonth',
+            // other options...
+            events: [
+            <?php if(!empty($calendar_data)){ ?>
+                <?php foreach($calendar_data as $program){ ?>
+                    {
+                        date_from: '<?php $formatted_date_from = date('d-m-Y', strtotime($program->program_date_from)); echo $formatted_date_from; ?>',
+                        date_to: '<?php $new_date = date('Y-m-d', strtotime($program->program_date_to . ' +1 day')); $formatted_date_to = date('d-m-Y', strtotime($program->program_date_to)); echo $formatted_date_to; ?>',
+                        title: '<?php echo str_replace("\n", "", $program->program_name); ?>',
+                        start: '<?php echo $program->program_date_from; ?>',
+                        end: '<?php echo $new_date; ?>',
+                        tempat: '<?php echo str_replace("\n", "", $program->program_location); ?>',
+                        pengelola: '<?php echo str_replace("\n", "", $program->program_host); ?>',
+                        kategori: '<?php echo str_replace("\n", "", $program->program_category); ?>',
+                        color: '#7DF9FF',
+                        textColor: '#FFFFFF' // Custom text color for the event
+                    },
+                <?php } ?>
+            <?php } ?>
+            
+            ],
+            eventClick: function(info) {
+                $('#eventModalBody').html('<p><strong>Program : </strong> ' + info.title + '</p>' +
+                                        '<p><strong>Tarikh Kejohanan / Program : </strong> ' + info.date_from + ' sehingga ' + info.date_to + '</p>' +
+                                        '<p><strong>Tempat : </strong> ' + info.tempat + '</p>' +
+                                        '<p><strong>Pengelola : </strong> ' + info.pengelola + '</p>' +
+                                        '<p><strong>Kategori : </strong> ' + info.kategori + '</p>');
+                $('#eventModal').modal('show');
+            },
+        });
+    });
+
+
     function drawChart() {
     // Define the chart to be drawn.
     var data = google.visualization.arrayToDataTable(<?php echo json_encode($barchart_data); ?>);
@@ -233,47 +287,10 @@
         var year = document.getElementById("selectYear").value;
         location.replace("/dashboard?year="+year);
     }
-
-    $('#calendar').fullCalendar({
-    // Set the calendar options
-    header: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'month,agendaWeek,agendaDay'
-    },
-    defaultView: 'month',
-    editable: true,
-    events: [], // Initialize with an empty events array
-
-    // Handle event drop or resize
-    eventDrop: function(event, delta, revertFunc) {
-      // Handle event drop or resize logic here
-      console.log(event.title + ' was dropped on ' + event.start.format());
-    },
-
-    // Handle event click
-    eventClick: function(event, jsEvent, view) {
-      // Handle event click logic here
-      console.log(event.title + ' was clicked!');
-    }
-  });
-
-  // Add event button click handler
-  $('#add-event').click(function() {
-    // Create a new event object
-    var newEvent = {
-      title: 'New Event',
-      start: moment().startOf('day'),
-      editable: true
-    };
-
-    // Add the event to the calendar
-    $('#calendar').fullCalendar('renderEvent', newEvent, true);
-  });
 </script>
 
 <!--begin::Page Vendors(used by this page) -->
-<script src="<?php echo base_url(); ?>asset/assets/vendors/custom/fullcalendar/fullcalendar.bundle.js" type="text/javascript"></script>
+
 <!-- <script src="//maps.google.com/maps/api/js?key=AIzaSyBTGnKT7dt597vo9QgeQ7BFhvSRP4eiMSM" type="text/javascript"></script> -->
 <!-- <script src="<?php echo base_url(); ?>asset/assets/vendors/custom/gmaps/gmaps.js" type="text/javascript"></script> -->
 <!--end::Page Vendors -->

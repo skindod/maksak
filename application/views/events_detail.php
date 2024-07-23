@@ -180,7 +180,7 @@
                                         <!--Begin::Section-->
                                             <div class="row">
                                                 <?php if($public_mode != true){ ?>	
-                                                <?php //if($event_details['location'][0]->closed_registration == false){ ?>
+                                                <?php if(($event_details['location'][0]->closed_registration == false && $_SESSION['role'] == 2) || $_SESSION['role'] == 1 || $_SESSION['role'] == 0){ ?>
                                                 <div class="col-xl-12">
                                                     <!--begin:: Widgets/Revenue Change-->
                                                     <div class="kt-portlet kt-portlet--height-fluid">
@@ -235,9 +235,15 @@
                                                                         <option value="pengurus">Pengurus</option>
                                                                         <option value="jurulatih">Jurulatih</option>
                                                                         <option value="pemain">Pemain</option>
-                                                                        <option value="fisio">Fisio</option>
-                                                                        <option value="kitman">Kitman</option>
-                                                                        <option value="koreografer">Koreografer</option>
+                                                                        <?php if(isset($event_details['sports'][0]->fisio_num) && $event_details['sports'][0]->fisio_num != "99"){ ?>
+                                                                            <option value="fisio">Fisio</option>
+                                                                        <?php } ?>
+                                                                        <?php if(isset($event_details['sports'][0]->kitman_num) && $event_details['sports'][0]->kitman_num != "99"){ ?>
+                                                                            <option value="kitman">Kitman</option>
+                                                                        <?php } ?>
+                                                                        <?php if(isset($event_details['sports'][0]->koreografer_num) && $event_details['sports'][0]->koreografer_num != "99"){ ?>
+                                                                            <option value="koreografer">Koreografer</option>
+                                                                        <?php } ?>
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-md-1 form-group">
@@ -260,7 +266,9 @@
                                                                         <th>Umur</th>
                                                                         <th>Jantina</th>
                                                                         <th>Taraf Jawatan</th>
-                                                                        <th>Handikap</th>
+                                                                        <?php if(strpos(strtolower($event_details[0]->name), 'golf') !== false) { ?>
+                                                                            <th>Handikap</th>
+                                                                        <?php } ?>
                                                                         <th>Buang Pemain</th>
                                                                     </thead>
                                                                     <tbody>
@@ -274,6 +282,12 @@
                                                                                             <?php echo strtoupper($player->name); ?>
                                                                                         <?php }else{ ?>
                                                                                             <a href="/players/details?id=<?php echo $player->player_id; ?>" target="_blank"><?php echo strtoupper($player->name); ?></a>
+                                                                                    <?php } ?>
+                                                                                    <?php 
+                                                                                        if(isset($_SESSION['login'])){ ?>
+                                                                                            <?php if($_SESSION['role'] == 0 || $_SESSION['role'] == 1){ ?>
+                                                                                                <?php echo "<br>".$player->ic; ?>
+                                                                                            <?php } ?>
                                                                                     <?php } ?>
                                                                                 </td>
                                                                                 <td><?php echo $player->badan_gabungan_name; ?></td>
@@ -294,7 +308,10 @@
                                                                                     <?php } else if($player->state_of_position == 'sementara'){ ?>
                                                                                         Sementara 
                                                                                         <?php if(isset($_SESSION['login'])){ ?>
-                                                                                            <a href="<?php echo base_url().'images/surat_pengesahan_jabatan/'.$player->surat_pengesahan_jabatan; ?>" target="_blank" data-toggle="tooltip" title="Surat pengesahan jabatan"><i class="flaticon2-file-1"></i></a>
+                                                                                            <a href="<?php echo base_url().'images/sah_surat_pelantikan/'.$player->sah_surat_pelantikan; ?>" target="_blank" data-toggle="tooltip" title="Sah surat pelantikan"><i class="flaticon2-file-1"></i></a>
+                                                                                            <a href="<?php echo base_url().'images/kad_pengenalan/'.$player->kad_pengenalan; ?>" target="_blank" data-toggle="tooltip" title="Kad pengenalan"><i class="flaticon2-file-1"></i></a>
+                                                                                            <a href="<?php echo base_url().'images/penyata_gaji/'.$player->penyata_gaji; ?>" target="_blank" data-toggle="tooltip" title="Penyata gaji"><i class="flaticon2-file-1"></i></a>
+                                                                                            <a href="<?php echo base_url().'images/caruman_kwsp/'.$player->caruman_kwsp; ?>" target="_blank" data-toggle="tooltip" title="Caruman KWSP"><i class="flaticon2-file-1"></i></a>
                                                                                         <?php } ?>
                                                                                     <?php } else if($player->state_of_position == 'contract of service'){ ?>
                                                                                         Contract of Service 
@@ -333,7 +350,9 @@
                                                                                     <?php } ?>
 
                                                                                 </td>
-                                                                                <td><?php if($player->handicap_no != ''){ echo '<b>'.$player->handicap_no.'</b> ('.$player->nhs_id.')'; }else{ echo '-'; } ?></td>
+                                                                                <?php if(strpos(strtolower($event_details[0]->name), 'golf') !== false) { ?>
+                                                                                    <td><?php if($player->handicap_no != ''){ echo '<b>'.$player->handicap_no.'</b> ('.$player->nhs_id.')'; }else{ echo '-'; } ?></td>
+                                                                                <?php } ?>
                                                                                 <td>
                                                                                     <?php echo form_open("events/remove_registered_player/".$event_details[0]->id."/".$player->id, $attributes); ?>
                                                                                         <button class="btn btn-danger btn-md" type="submit" onclick="return confirm('Anda pasti buang pemain ini?')"><i class="flaticon2-trash"></i></button>
@@ -360,7 +379,7 @@
                                                     </div>
                                                     <!--end:: Widgets/Revenue Change-->
                                                 </div>
-                                                <?php //} ?>
+                                                <?php } ?>
                                                 <?php } ?>
                                                 <div class="col-xl-12">
                                                     <div class="kt-portlet kt-portlet--mobile">
@@ -646,6 +665,21 @@
                                 {
                                     extend: 'pdf',
                                     title: '<?php echo $reg->sport_name; ?>',
+                                    customize: function(doc) {
+                                        // Get the DataTable instance
+                                        var table = $('#sortTableSearch<?php echo $reg->id; ?>').DataTable();
+                                        
+                                        // Get the total number of columns in the DataTable
+                                        var numColumns = table.columns().count();
+                                        
+                                        // Remove the last column header from the PDF output
+                                        $(doc.content[1].table.header).find('th').last().remove();
+                                        
+                                        // Remove the last column data cells from the PDF output
+                                        $(doc.content[1].table.body).each(function() {
+                                            $(this).find('td').last().remove();
+                                        });
+                                    }
                                 }
                             ]
                         });
@@ -672,6 +706,18 @@
                                 {
                                     extend: 'pdf',
                                     title: '<?php echo $search->name; ?>',
+                                    customize: function(doc) {
+                                        // Get the DataTable instance
+                                        var table = $('#sortTableSearch<?php echo $search->id; ?>').DataTable();
+                                        
+                                        // Get the total number of columns in the DataTable
+                                        var numColumns = table.columns().count();
+                                        
+                                        // Remove the last column from the PDF output
+                                        $(doc.content[1].table.body).each(function() {
+                                            $(this).find('td').eq(numColumns - 1).remove();
+                                        });
+                                    }
                                 }
                             ]
                         });

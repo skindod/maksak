@@ -13,6 +13,7 @@ class Dashboard extends CI_Controller {
         $this->load->model('events_model');
         $this->load->model('sports_model');
         $this->load->model('result_model');
+        $this->load->model('calendar_model');
         
         //load the login model
 //        $this->load->model('login_model');
@@ -36,8 +37,9 @@ class Dashboard extends CI_Controller {
         $data['sports_data'] = $this->sports_model->get_dashboard_data($year);
         $data['barchart_data'] = $this->events_model->get_dashboard_barchart_data($year);
         $data['ranking_data'] = $this->result_model->get_ranking_data($year);
+        $data['calendar_data'] = $this->calendar_model->get_list($year);
         $data['selectYear'] = $year;
-// echo '<pre>'; print_r($data['ranking_data']); die();
+// echo '<pre>'; print_r($data['calendar_data']); die();
         // if($_SESSION['role'] == 0){
         //     $this->load->view('dashboard', $data);
         // } else if($_SESSION['role'] == 1){

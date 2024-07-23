@@ -190,6 +190,7 @@ class register_model extends CI_Model {
             $this->db->join('players', 'register.player_id = players.id', 'LEFT');
             $this->db->from('register');
             if($sport_id != '0'){
+                $this->db->select('register.sport_id');
                 $this->db->where('register.sport_id', $sport_id);
             }
             if($jawatan != '0'){
@@ -206,7 +207,9 @@ class register_model extends CI_Model {
             }
             $this->db->where('register.event_id', $event_id);
             $this->db->where('register.badan_gabungan_id', $state->id);
-            $this->db->order_by('register.sport_id', 'ASC');
+            if($sport_id != '0'){
+                $this->db->order_by('register.sport_id', 'ASC');
+            }
             $this->db->distinct('register.player_id');
             $query1 = $this->db->get();
             $result1 = $query1->result();
@@ -245,7 +248,7 @@ class register_model extends CI_Model {
         
         foreach($sports as $sport){
             
-            $this->db->select('register.id, register.player_id, register.name, register.playing_position, register.age, register.veteran_status, register.sex, register.state_of_position');
+            $this->db->select('register.id, register.player_id, register.name, register.playing_position, register.age, register.veteran_status, register.sex, players.state_of_position, register.ic');
             $this->db->select('sports.name as sport_name');
             $this->db->select('badan_gabungan.name as badan_gabungan_name');
             $this->db->select('players.handicap_no');

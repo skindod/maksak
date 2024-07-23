@@ -28,7 +28,7 @@ class Events extends CI_Controller {
         }
         $data['events_list'] = $this->events_model->get_list($year);
         $data['selectYear'] = $year;
-        
+        // echo '<pre>'; print_r($data['events_list']); die();
         $this->load->view('events_list', $data);
     }
     
@@ -40,13 +40,14 @@ class Events extends CI_Controller {
             $data['public_mode'] = false;
         }
         $data['event_details'] = $this->events_model->get_detail($event_id);
+        
         $data['badan_gabungan_list'] = $this->badanGabungan_model->get_list();
         if(isset($_SESSION['badan_gabungan_id']) && $_SESSION['badan_gabungan_id'] != 0){ 
             $data['registered_list'] = $this->register_model->get_registered_list($event_id);
         } else {
             $data['registered_list'] = $this->register_model->get_registered_list($event_id);
         }
-        
+        // echo '<pre>'; print_r($data['registered_list']); die();
         $this->load->view('events_detail', $data);
     }
 

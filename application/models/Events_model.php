@@ -188,6 +188,7 @@ class events_model extends CI_Model {
             $data = array(
                 'event_id' => $event_id,
                 'sport_id' => $sport['acara'],
+                'event_sports_category' => $sport['acara_kategori'],
                 'veteran_age_male' => (empty($sport['veteran_age_male']) || $sport['veteran_age_male'] == 0)?99:$sport['veteran_age_male'],
                 'veteran_age_female' => (empty($sport['veteran_age_female']) || $sport['veteran_age_female'] == 0)?99:$sport['veteran_age_female'],
                 'veteran_num' => (empty($sport['veteran_limit']) || $sport['veteran_limit'] == 0)?99:$sport['veteran_limit'],
@@ -243,6 +244,7 @@ class events_model extends CI_Model {
                 $data = array(
                     'event_id' => $event_id,
                     'sport_id' => $sport['acara'],
+                    'event_sports_category' => $sport['acara_kategori'],
                     'veteran_age_male' => (empty($sport['veteran_age_male']) || $sport['veteran_age_male'] == 0)?99:$sport['veteran_age_male'],
                     'veteran_age_female' => (empty($sport['veteran_age_female']) || $sport['veteran_age_female'] == 0)?99:$sport['veteran_age_female'],
                     'veteran_num' => (empty($sport['veteran_limit']) || $sport['veteran_limit'] == 0)?99:$sport['veteran_limit'],
@@ -460,6 +462,17 @@ class events_model extends CI_Model {
         return $result;
     }
 
+    function get_event_sports_category_by_event_id_and_sport_id($event_id, $sport_id) {    
+        $this->db->select('event_sports_category');
+        $this->db->from('events_sports');
+        $this->db->where('events_sports.event_id', $event_id);
+        $this->db->where('events_sports.sport_id', $sport_id);
+        $query = $this->db->get();
+        $result = $query->result();
+        
+        return $result;
+    }
+
     function get_olahraga_report($id) {
 
         $response = array();
@@ -645,13 +658,14 @@ class events_model extends CI_Model {
 
         for($month = 1; $month < 13; $month++){
             $month2 = sprintf("%02d", $month);
+	    $totalDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
             $this->db->select('register.*');
             $this->db->from('events');
             $this->db->join('events_location','events_location.event_id = events.id');
             $this->db->join('register','register.event_id = events.id');
             $this->db->where('events_location.date_from >=', $year.'-'.$month2.'-01 00:00:00');
-            $this->db->where('events_location.date_from <=', $year.'-'.$month2.'-31 23:59:59');
+            $this->db->where('events_location.date_from <=', $year.'-'.$month2.'-'.$totalDays.' 23:59:59');
             $query = $this->db->get();
             $num = $query->num_rows();
 

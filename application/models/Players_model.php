@@ -37,7 +37,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/vaccine_doc';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $vaccine_doc;
 
                     $this->load->library('upload', $config);
@@ -80,7 +80,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/passport_pic';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $passport_pic;
 
                     $this->load->library('upload', $config);
@@ -123,7 +123,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/surat_pelantikan_terkini';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $surat_pelantikan_terkini;
                     
                     $this->load->library('upload', $config);
@@ -166,7 +166,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/surat_pelantikan_terdahulu';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $surat_pelantikan_terdahulu;
                     
                     $this->load->library('upload', $config);
@@ -209,7 +209,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/sah_surat_pelantikan';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $sah_surat_pelantikan;
                     
                     $this->load->library('upload', $config);
@@ -247,7 +247,7 @@ class players_model extends CI_Model
                         redirect(base_url('players/create'));
                     }
 
-                    // if($_FILES["surat_hrmis"]['size'] > 2000){
+                    // if($_FILES["surat_hrmis"]['size'] > 20480){
                     //     $session = array(
                     //         'msgstatus' => 0,
                     //         'msg' => $this->upload->display_errors().' Laporan Profil Perkhidmatan Semasa Hrmis lebih dari 2MB! Sila muatnaik fail bawah dari 2MB.'
@@ -262,7 +262,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/surat_hrmis';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $surat_hrmis;
                     
                     $this->load->library('upload', $config);
@@ -305,7 +305,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/kad_pengenalan';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $kad_pengenalan;
 
                     $this->load->library('upload', $config);
@@ -348,7 +348,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/penyata_gaji';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $penyata_gaji;
 
                     $this->load->library('upload', $config);
@@ -391,7 +391,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/caruman_kwsp';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $caruman_kwsp;
 
                     $this->load->library('upload', $config);
@@ -434,7 +434,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/surat_pengesahan_jabatan';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $surat_pengesahan_jabatan;
 
                     $this->load->library('upload', $config);
@@ -531,7 +531,7 @@ class players_model extends CI_Model
             'created_date' => date('Y-m-d H:i:s')
         );
         
-        if($state_of_position == '' || $state_of_position == 'tetap'){
+        if($state_of_position == '' || $state_of_position == 'lain lain'){
             $data1['surat_hrmis'] = '';
             $data1['surat_pelantikan_terkini'] = '';
             $data1['surat_pelantikan_terdahulu'] = '';
@@ -541,9 +541,29 @@ class players_model extends CI_Model
             $data1['caruman_kwsp'] = '';
             $data1['surat_pengesahan_jabatan'] = '';
         }
+        if($state_of_position == 'tetap'){
+            $data1['surat_pelantikan_terkini'] = '';
+            $data1['surat_pelantikan_terdahulu'] = '';
+            $data1['sah_surat_pelantikan'] = '';
+            $data1['kad_pengenalan'] = '';
+            $data1['penyata_gaji'] = '';
+            $data1['caruman_kwsp'] = '';
+            $data1['surat_pengesahan_jabatan'] = '';
+        }
+        if($state_of_position == 'sementara' || $state_of_position == 'contract of service'){
+            $data1['surat_hrmis'] = '';
+            $data1['surat_pelantikan_terkini'] = '';
+            $data1['surat_pelantikan_terdahulu'] = '';
+            $data1['surat_pengesahan_jabatan'] = '';
+        }
+        if($state_of_position == 'contract for service' || $state_of_position == 'mystep'){
+            $data1['surat_hrmis'] = '';
+            $data1['sah_surat_pelantikan'] = '';
+            $data1['surat_pengesahan_jabatan'] = '';
+        }
 
-        $this->db->where('id', $id);
-        $this->db->update('players', $data1);
+        // $this->db->where('id', $id);
+        // $this->db->update('players', $data1);
 
         $vaccine_doc = '';
         if (isset($_FILES['vaccine_doc'])) {
@@ -569,7 +589,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/vaccine_doc';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $vaccine_doc;
 
                     $this->load->library('upload', $config);
@@ -611,7 +631,7 @@ class players_model extends CI_Model
 
                 $config['upload_path'] = './images/passport_pic';
                 $config['allowed_types'] = '*';
-                $config['max_size'] = 2000;
+                $config['max_size'] = 20480;
                 $config['file_name'] = $passport_pic;
 
                 $this->load->library('upload', $config);
@@ -652,7 +672,7 @@ class players_model extends CI_Model
 
                 $config['upload_path'] = './images/surat_pelantikan_terkini';
                 $config['allowed_types'] = '*';
-                $config['max_size'] = 2000;
+                $config['max_size'] = 20480;
                 $config['file_name'] = $surat_pelantikan_terkini;
                 
                 $this->load->library('upload', $config);
@@ -693,7 +713,7 @@ class players_model extends CI_Model
 
                 $config['upload_path'] = './images/surat_pelantikan_terdahulu';
                 $config['allowed_types'] = '*';
-                $config['max_size'] = 2000;
+                $config['max_size'] = 20480;
                 $config['file_name'] = $surat_pelantikan_terdahulu;
                 
                 $this->load->library('upload', $config);
@@ -734,7 +754,7 @@ class players_model extends CI_Model
 
                 $config['upload_path'] = './images/sah_surat_pelantikan';
                 $config['allowed_types'] = '*';
-                $config['max_size'] = 2000;
+                $config['max_size'] = 20480;
                 $config['file_name'] = $sah_surat_pelantikan;
                 
                 $this->load->library('upload', $config);
@@ -753,7 +773,7 @@ class players_model extends CI_Model
                 }
             }
         }
-        // echo 'in!<br>'; 
+        
         $surat_hrmis = '';
         if (isset($_FILES['surat_hrmis'])) {
             $check = $_FILES['surat_hrmis']['name'];
@@ -773,7 +793,7 @@ class players_model extends CI_Model
                         redirect(base_url('players/update/'.$id));
                     }
 
-                    // if($_FILES["surat_hrmis"]['size'] > 2000){
+                    // if($_FILES["surat_hrmis"]['size'] > 20480){
                     //     $session = array(
                     //         'msgstatus' => 0,
                     //         'msg' => 'Laporan Profil Perkhidmatan Semasa Hrmis lebih dari 2MB! Sila muatnaik fail bawah dari 2MB.'
@@ -808,7 +828,7 @@ class players_model extends CI_Model
                 }
             }
         }
-        // echo 'out!<br>'; die();
+        
         $kad_pengenalan = '';
         if (isset($_FILES['kad_pengenalan'])) {
             $check = $_FILES['kad_pengenalan']['name'];
@@ -833,7 +853,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/kad_pengenalan';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $kad_pengenalan;
 
                     $this->load->library('upload', $config);
@@ -878,7 +898,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/penyata_gaji';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $penyata_gaji;
 
                     $this->load->library('upload', $config);
@@ -923,7 +943,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/caruman_kwsp';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $caruman_kwsp;
 
                     $this->load->library('upload', $config);
@@ -968,7 +988,7 @@ class players_model extends CI_Model
 
                     $config['upload_path'] = './images/surat_pengesahan_jabatan';
                     $config['allowed_types'] = '*';
-                    $config['max_size'] = 2000;
+                    $config['max_size'] = 20480;
                     $config['file_name'] = $surat_pengesahan_jabatan;
 
                     $this->load->library('upload', $config);
@@ -988,7 +1008,7 @@ class players_model extends CI_Model
                 }
             }
         }
-        
+        // echo '<pre>'; print_r($data1); die();
         $this->db->where('id', $id);
         $this->db->update('players', $data1);
         
