@@ -216,7 +216,6 @@ class register_model extends CI_Model {
            
             if(count($result1) > 0){
                 foreach($result1 as $res){
-                    // $this->db->select('register.name, register.playing_position, register.age, register.sex, register.player_id,');
                     $this->db->select('sports.name as sport_name');
                     $this->db->from('register');
                     $this->db->join('sports', 'register.sport_id = sports.id', 'LEFT');
@@ -224,6 +223,7 @@ class register_model extends CI_Model {
                         $this->db->where('register.sport_id', $sport_id);
                     }
                     $this->db->where('register.player_id', $res->player_id);
+                    $this->db->where('register.event_id', $event_id);
                     $query2 = $this->db->get();
                     $result2 = $query2->result();
                     $res->sports = $query2->result();
@@ -232,7 +232,7 @@ class register_model extends CI_Model {
                 $state->data_list = $result1;
             }
         }
-        // echo '<pre>'; print_r($states); die();
+        
         return $states;
     }
     
