@@ -278,6 +278,24 @@ class register_model extends CI_Model {
         
         return $sports;
     }
+
+    public function get_registered_list_by_player_id_and_year($player_id, $year) {
+        
+        $this->db->select('r.*, e.name as event_name, s.name as sport_name, bg.name as badan_gabungan_name, g.name as grade_name, el.location_name, el.date_from as kejohanan_date_from, el.date_to as kejohanan_date_to');
+        $this->db->from('register r');
+        $this->db->join('events e', 'e.id = r.event_id');
+        $this->db->join('events_location el', 'el.event_id = e.id');
+        $this->db->join('sports s', 's.id = r.sport_id');
+        $this->db->join('badan_gabungan bg', 'bg.id = r.badan_gabungan_id');
+        $this->db->join('grade g', 'g.id = r.grade_id');
+        $this->db->where('player_id', $player_id);
+        $this->db->where('YEAR(el.date_from)', $year);
+        $this->db->order_by('kejohanan_date_from', 'desc');
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return $result;
+    }
 }
 
 ?>

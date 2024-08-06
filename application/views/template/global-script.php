@@ -105,6 +105,7 @@
 		<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.colVis.min.js"></script>
 		<script type="text/javascript">
 			$('.sortTable').DataTable({
+				order: [],
                 dom: 'Bfrtip',
                 buttons: [
                     'csvHtml5',

@@ -19,7 +19,14 @@
 				<!-- begin:: Content Head -->
 				<div class="kt-subheader   kt-grid__item" id="kt_subheader">
                                     <div class="kt-subheader__main">
-                                        <h3 class="kt-subheader__title" style="width: 400px;">Pemain</h3>
+                                        <h3 class="kt-subheader__title" style="">Senarai acara ditanding oleh <b><?php echo $player->name; ?></b></h3>
+                                        <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                                        <span class="kt-subheader__desc">Data tahun</span>
+                                        <select id="selectYear" onchange="changeYear()">
+                                            <?php for($a = date('Y'); $a > 2020; $a--){ ?>
+                                                <option value="<?php echo $a; ?>" <?php if($a == $selectYear){ echo 'selected'; } ?>><?php echo $a; ?></option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
 				</div>
                                 <!-- end:: Content Head -->
@@ -34,41 +41,15 @@
                                                 <div class="kt-portlet__head kt-portlet__head--lg">
                                                     <div class="kt-portlet__head-label">
                                                         <h3 class="kt-portlet__head-title">
-                                                            Cari pemain
+                                                            Senarai acara
                                                         </h3>
                                                     </div>
-                                                </div>
-                                                <div class="kt-portlet__body">
-                                                    <?php $attributes = array("id" => "search", "name" => "search", "class" => "kt-form");
-                                                    echo form_open("players/search_player", $attributes); ?>
-                                                    <!--begin: Search Form -->
-                                                    <div class="kt-form kt-form--label-right kt-margin-t-20 kt-margin-b-10">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-xl-12">
-                                                                <div class="row align-items-center" style="margin-bottom: 20px;">
-                                                                    <div class="col-md-11 kt-margin-b-20-tablet-and-mobile">
-                                                                        <div class="kt-input-icon kt-input-icon--left">
-                                                                            <input type="text" class="form-control" placeholder="IC atau Nama pemain (cth: 900111551234, adam)" name="ic" id="generalSearch" required="">
-                                                                            <span class="kt-input-icon__icon kt-input-icon__icon--left">
-                                                                                <span><i class="la la-search"></i></span>
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-1 kt-margin-b-20-tablet-and-mobile">
-                                                                        <button type="submit" class="btn btn-primary btn-upper">cari</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!--end: Search Form -->
-                                                    <?php echo form_close(); ?>
                                                 </div>
                                                 <div class="kt-portlet__body kt-portlet__body--fit">
                                                     <div style="padding: 20px;">
                                                         <div class="accordion accordion-solid accordion-toggle-plus" id="accordionBox">
                                                         <!--begin::Accordion-->
-                                                        <?php if(isset($player) && count($player)>0){  ?>
+                                                        <?php if(isset($player)){  ?>
                                                             <div class="card-body">
                                                                 <div class="kt-portlet__body">
                                                                     <!--begin::Section-->
@@ -76,34 +57,42 @@
                                                                         <div class="kt-section__content">
                                                                             <table class="table table-striped sortTable">
                                                                                 <thead>
-                                                                                    <th>Nama</th>
-                                                                                    <th>Email</th>
-                                                                                    <th>Tarikh Lahir</th>
-                                                                                    <th>Jantina</th>
-                                                                                    <th>Taraf Jawatan</th>
-                                                                                    <th>Kemaskini</th>
-                                                                                    <th>Acara Ditanding</th>
+                                                                                    <th>Butiran pemain</th>
+                                                                                    <th>Butiran jawatan & majikan</th>
+                                                                                    <th>Butiran kejohanan</th>
+                                                                                    <th>Butiran acara ditanding</th>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                    <?php foreach($player as $play){ ?>
+                                                                                    <?php foreach($sports_list as $sport){ ?>
                                                                                     <tr>
                                                                                         <td>
-                                                                                            <a target="_blank" href="<?php $pic = 'default_avatar.jpeg'; if(!empty($play->passport_pic)){ $pic = $play->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>"><img class="kt-hidden-" style="width: 25px; height: 25px;" alt="Pic" src="<?php $pic = 'default_avatar.jpeg'; if(!empty($play->passport_pic)){ $pic = $play->passport_pic; } echo base_url() . 'images/passport_pic/' . $pic; ?>" /></a>
-                                                                                            <?php echo strtoupper($play->name); ?>
-                                                                                        </td>
-                                                                                        <td><?php echo $play->email; ?></td>
-                                                                                        <td><?php echo $play->dob_day.'-'.$play->dob_month.'-'.$play->dob_year; ?></td>
-                                                                                        <td><?php if($play->sex == 1){ echo 'Lelaki'; }else{ echo 'Perempuan'; } ?></td>
-                                                                                        <td><?php echo ucfirst($play->state_of_position); ?></td>
-                                                                                        <td>
-                                                                                            <a href="<?php echo base_url().'players/update/'.$play->id; ?>" class="btn kt-subheader__btn-primary btn-icon" target="_blank">
-                                                                                                <i class="flaticon2-edit"></i>
-                                                                                            </a>
+                                                                                            Nama : <b><?php echo $sport->name; ?></b><br>
+                                                                                            Umur & Jantina : <b><?php echo $sport->age.' '; if($sport->sex == 1){ echo '( Lelaki )'; }else{ echo '( Perempuan )'; } ?></b><br>
+                                                                                            Tarikh lahir : <b><?php echo $sport->dob_day.'-'.$sport->dob_month.'-'.$sport->dob_year; ?></b><br>
+                                                                                            Nombor telefon : <b><?php echo $sport->telephone; ?></b><br>
+                                                                                            Email : <b><?php echo $sport->email; ?></b>
                                                                                         </td>
                                                                                         <td>
-                                                                                            <a href="<?php echo base_url().'players/players_join_sports_list/'.$play->id; ?>" class="btn kt-subheader__btn-primary btn-icon" target="_blank">
-                                                                                                <i class="flaticon2-list"></i>
-                                                                                            </a>
+                                                                                            Majikan : <b><?php echo $sport->employer; ?></b><br>
+                                                                                            Jawatan : <b><?php echo $sport->occupation; ?></b><br>
+                                                                                            Grade : <b><?php echo $sport->grade_name; ?></b><br>
+                                                                                            Taraf jawatan : <b><?php echo $sport->state_of_position; ?></b>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            Kejohanan : <b><?php echo $sport->event_name; ?></b><br>
+                                                                                            Lokasi : <b><?php echo $sport->location_name; ?></b><br>
+                                                                                            Tarikh : 
+                                                                                            <?php 
+                                                                                                $date_from = new DateTime($sport->kejohanan_date_from);
+                                                                                                $date_to = new DateTime($sport->kejohanan_date_to);
+                                                                                                $formattedDateFrom = $date_from->format('d/m/Y');
+                                                                                                $formattedDateTo = $date_to->format('d/m/Y');
+                                                                                                echo '<b>'.$formattedDateFrom . ' - ' . $formattedDateTo.'</b>';
+                                                                                            ?>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            Acara : <b><?php echo $sport->sport_name; ?></b><br>
+                                                                                            Jawatan : <b><?php echo $sport->registered_position; ?></b>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <?php } ?>
@@ -137,6 +126,10 @@
 		<script src="<?php echo base_url(); ?>asset/assets/js/demo10/pages/dashboard.js" type="text/javascript"></script> <!-- for donut chart -->
 		<!--<script src="<?php echo base_url(); ?>asset/assets/js/data-local.js" type="text/javascript"></script>  for dropdown keputusan table -->
 		<!--end::Page Scripts -->
-                <script>
-                </script>
+        <script>
+            function changeYear() {
+                var year = document.getElementById("selectYear").value;
+                location.replace("/players/players_join_sports_list/<?php echo $player->id; ?>?year="+year);
+            }
+        </script>
 <?php include "template/footer.php"; ?>

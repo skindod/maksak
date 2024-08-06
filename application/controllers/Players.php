@@ -17,6 +17,7 @@ class Players extends CI_Controller {
         $this->load->model('grade_model');
         $this->load->model('badanGabungan_model');
         $this->load->model('logs_model');
+        $this->load->model('register_model');
 
         $this->jompay = $this->load->database('default', TRUE);
     }
@@ -365,4 +366,22 @@ class Players extends CI_Controller {
         }
     }
 
+    public function Players_join_sports_list($id) 
+    {
+        if (!isset($_SESSION['login'])) {
+            redirect(base_url());
+        }
+
+        $year = $this->input->get('year');
+        if(empty($year))
+        {
+            $year = date('Y');
+        }
+
+        $data['player'] = $this->players_model->get_player_data($id);
+        $data['sports_list'] = $this->register_model->get_registered_list_by_player_id_and_year($id, $year);
+        $data['selectYear'] = $year;
+        // echo '<pre>'; print_r($data); die();
+        $this->load->view('players_join_sports_list', $data);
+    }
 }
