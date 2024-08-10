@@ -181,6 +181,19 @@ class events_model extends CI_Model {
         return ($this->db->affected_rows() != 1) ? true : false;
     }
 
+    public function update_last_registration_date($event_id, $last_registration_date) {
+
+        $last_registration_date1 = date("Y-m-d", strtotime($last_registration_date));
+
+        $this->db->set('last_registration_date', $last_registration_date1);
+        $this->db->set('modified_by', $_SESSION['userid']);
+        $this->db->set('modified_date', date('Y-m-d H:i:s'));
+        $this->db->where('event_id', $event_id);
+        $this->db->update('events_location');
+                
+        return ($this->db->affected_rows() != 1) ? true : false;
+    }
+
     public function create_event_sports($event_id, $sports_arr) {
 
         $sport_id_arr = array();

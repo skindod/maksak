@@ -28,8 +28,24 @@ class Events extends CI_Controller {
         }
         $data['events_list'] = $this->events_model->get_list($year);
         $data['selectYear'] = $year;
-        // echo '<pre>'; print_r($data['events_list']); die();
+        // echo '<pre>'; print_r($_SESSION); die();
         $this->load->view('events_list', $data);
+    }
+
+    public function Change_date()
+    {
+        if (!isset($_SESSION['login'])) {
+            redirect(base_url());
+        }
+
+        //get the posted values
+        $event_id = $this->input->post("event_id");
+        $last_registration_date = $this->input->post("last_registration_date");
+        
+        // $event_id = $this->events_model->update_last_registration_date($event_id, $last_registration_date);
+        $this->events_model->update_last_registration_date($event_id, $last_registration_date);
+        
+        redirect(base_url('events/index'));
     }
     
     public function Details($event_id)

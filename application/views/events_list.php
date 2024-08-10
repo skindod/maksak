@@ -67,6 +67,36 @@
                                                                         <?php } ?>
                                                                     </a>
                                                                     <div class="kt-widget__action">
+                                                                        <?php if($_SESSION['role'] == 0){ ?>
+                                                                            <button type="button" class="btn btn-secondary btn-sm btn-upper" onclick="openModal()">ubah tarikh tutup pendaftaran</button>&nbsp;
+                                                                            <!-- Modal -->
+                                                                            <div class="modal fade" id="dateTimeModal" tabindex="-1" role="dialog" aria-labelledby="dateTimeModalLabel" aria-hidden="true">
+                                                                                <div class="modal-dialog" role="document">
+                                                                                    <div class="modal-content">
+                                                                                        <?php $attributes = array("id" => "changedateform", "name" => "changedateform");
+                                                                                        echo form_open_multipart("events/change_date", $attributes);?>
+                                                                                            <div class="modal-header">
+                                                                                                <h5 class="modal-title" id="dateTimeModalLabel">Ubah tarik tutup pendaftaran</h5>
+                                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                            <div class="modal-body">
+                                                                                                <div class="form-group">
+                                                                                                    <label for="datetime">Pilih tarikh :</label>
+                                                                                                    <input type="text" class="form-control" id="kt_datepicker_1" readonly name="last_registration_date" required="" />
+                                                                                                    <input type="hidden" name="event_id" value="<?php echo $event->id; ?>" />
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="modal-footer">
+                                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                                                                <input type="submit" value="Hantar" class="btn btn-success" />
+                                                                                            </div>
+                                                                                        <?php echo form_close(); ?>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php } ?>
                                                                         <a href="<?php echo base_url().'events/details/'.$event->id; ?>">
                                                                             <button type="button" class="btn btn-primary btn-sm btn-upper">butiran</button>&nbsp;
                                                                         </a>
@@ -240,6 +270,10 @@
         var year = document.getElementById("selectYear").value;
         location.replace("/events?year="+year);
     }
+
+    function openModal() {
+        $('#dateTimeModal').modal('show');
+    }
 </script>
 
                 <!--begin::Page Vendors(used by this page) -->
@@ -249,6 +283,7 @@
                 <!--end::Page Vendors -->
 
                 <!--begin::Page Scripts(used by this page) -->
+                <script src="<?php echo base_url(); ?>asset/assets/js/demo1/pages/crud/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
                 
                 <!--end::Page Scripts -->
 
