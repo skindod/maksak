@@ -160,6 +160,18 @@
                                             </div>
                                         </a>
 <?php } ?>
+<?php if ($_SESSION['role'] != 2) { ?>
+                                        <a href="<?php echo base_url(); ?>jointBodies/list" class="kt-notification__item">
+                                            <div class="kt-notification__item-icon">
+                                                <i class="flaticon2-layers kt-font-warning"></i>
+                                            </div>
+                                            <div class="kt-notification__item-details">
+                                                <div class="kt-notification__item-title">
+                                                    Lihat senarai badan gabungan
+                                                </div>
+                                            </div>
+                                        </a>
+<?php } ?>
 <?php if ($_SESSION['role'] == 0) { ?>
                                         <a href="<?php echo base_url(); ?>admins/create" class="kt-notification__item">
                                             <div class="kt-notification__item-icon">
