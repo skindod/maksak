@@ -690,6 +690,37 @@ class events_model extends CI_Model {
         
         return $return;
     }
+
+    function get_list_for_allowance($year = '') 
+    {
+        $this->db->select('e.*, DATE_FORMAT(el.date_from, "%d/%m/%y") AS date_from, DATE_FORMAT(el.date_to, "%d/%m/%y") AS date_to');
+        $this->db->from('events e');
+        $this->db->join('events_location el', 'e.id = el.event_id');
+        $this->db->where('publish_status', 1);
+        $this->db->where('YEAR(el.date_from)', $year);
+        $this->db->order_by('id', 'desc');
+        $query = $this->db->get();
+        $result = $query->result();
+        
+        return $result;
+    }
+
+    function get_list_for_allowance_report($selected_year, $selected_bg, $selected_events) 
+    {
+        $this->db->select('e.id as event_id, e.name as event_name, DATE_FORMAT(el.date_from, "%d/%m/%y") AS date_from, DATE_FORMAT(el.date_to, "%d/%m/%y") AS date_to');
+        $this->db->select('DATEDIFF(el.date_to, el.date_from) + 1 AS number_of_days, DATEDIFF(el.date_to, el.date_from) AS number_of_nights, count(r.id) as num_of_players');
+        $this->db->from('events e');
+        $this->db->join('events_location el', 'e.id = el.event_id');
+        $this->db->join('register r', 'r.event_id = e.id');
+        $this->db->where_in('e.id', $selected_events);
+        $this->db->where('r.badan_gabungan_id', $selected_bg);
+        $this->db->group_by('1,2,3,4,5,6');
+        $this->db->order_by('e.id', 'desc');
+        $query = $this->db->get();
+        $result = $query->result();
+        
+        return $result;
+    }
 }
 
 ?>

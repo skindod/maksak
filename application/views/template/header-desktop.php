@@ -172,6 +172,18 @@
                                             </div>
                                         </a>
 <?php } ?>
+<?php if ($_SESSION['role'] != 2) { ?>
+                                        <a href="<?php echo base_url(); ?>report/allowance" class="kt-notification__item">
+                                            <div class="kt-notification__item-icon">
+                                                <i class="flaticon2-list-2 kt-font-warning"></i>
+                                            </div>
+                                            <div class="kt-notification__item-details">
+                                                <div class="kt-notification__item-title">
+                                                    Laporan elaun
+                                                </div>
+                                            </div>
+                                        </a>
+<?php } ?>
 <?php if ($_SESSION['role'] == 0) { ?>
                                         <a href="<?php echo base_url(); ?>admins/create" class="kt-notification__item">
                                             <div class="kt-notification__item-icon">
