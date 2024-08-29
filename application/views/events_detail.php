@@ -235,13 +235,29 @@
                                                                         <option value="pengurus">Pengurus</option>
                                                                         <option value="jurulatih">Jurulatih</option>
                                                                         <option value="pemain">Pemain</option>
-                                                                        <?php if(isset($event_details['sports'][0]->fisio_num) && $event_details['sports'][0]->fisio_num != "99"){ ?>
+                                                                        <?php 
+                                                                            $fisio_exist = 'no';
+                                                                            $kitman_exist = 'no';
+                                                                            $koreografer_exist = 'no';
+                                                                            foreach($event_details['sports'] as $sports){
+                                                                                if(isset($sports->fisio_num) && $sports->fisio_num != "99"){
+                                                                                    $fisio_exist = 'yes';
+                                                                                }
+                                                                                if(isset($sports->kitman_num) && $sports->kitman_num != "99"){
+                                                                                    $kitman_exist = 'yes';
+                                                                                }
+                                                                                if(isset($sports->koreografer_num) && $sports->koreografer_num != "99"){
+                                                                                    $koreografer_exist = 'yes';
+                                                                                }
+                                                                            }
+                                                                        ?>
+                                                                        <?php if($fisio_exist == 'yes'){ ?>
                                                                             <option value="fisio">Fisio</option>
                                                                         <?php } ?>
-                                                                        <?php if(isset($event_details['sports'][0]->kitman_num) && $event_details['sports'][0]->kitman_num != "99"){ ?>
+                                                                        <?php if($kitman_exist == 'yes'){ ?>
                                                                             <option value="kitman">Kitman</option>
                                                                         <?php } ?>
-                                                                        <?php if(isset($event_details['sports'][0]->koreografer_num) && $event_details['sports'][0]->koreografer_num != "99"){ ?>
+                                                                        <?php if($koreografer_exist == 'yes'){ ?>
                                                                             <option value="koreografer">Koreografer</option>
                                                                         <?php } ?>
                                                                     </select>
