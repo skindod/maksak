@@ -1,3 +1,4 @@
+
 <!-- begin:: Header -->
 <div id="kt_header" class="kt-header kt-grid__item  kt-header--fixed " data-ktheader-minimize="on">
     <div class="kt-header__top">
@@ -7,7 +8,7 @@
             <div class="kt-header__brand   kt-grid__item" id="kt_header_brand">
                 <div class="kt-header__brand-logo">
                     <a href="<?php echo base_url('dashboard/index'); ?>">
-                        <img class="logo-small" alt="Logo MAKSAK" src="<?php echo base_url(); ?>asset/assets/media/logos/logo-maksak.png" class="kt-header__brand-logo-default" />
+                        <img alt="Logo" style="width: 20%" src="<?php echo base_url(); ?>asset/assets/media/logos/logo-maksak-bak.png" />
                     </a>
                 </div>
             </div>

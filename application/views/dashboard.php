@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="kt-subheader__toolbar">
                                     <div class="kt-subheader__wrapper">
-                                        <span class="kt-subheader__desc"><i class="flaticon2-calendar-1"></i> <?php echo date('M j'); ?></span>
+                                        <span class="kt-subheader__desc"><i class="flaticon2-calendar-1"></i> <?php echo $malayMonths[$month] . ' ' . $day; ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -239,9 +239,9 @@
         $('#calendar').fullCalendar({
             locale: 'ms',
             initialView: 'dayGridMonth',
-            firstDay: 0,  // Start the week on Monday
-            dayNames: ["Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu", "Ahad"],
-            dayNamesShort: ["Isn", "Sel", "Rab", "Khms", "Jum", "Sab", "Ahd"],
+            firstDay: 1,  // Start the week on Monday
+            dayNames: ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"],
+            dayNamesShort: ["Ahd", "Isn", "Sel", "Rab", "Khms", "Jum", "Sab"],
             // Manually set month names in Malay
             monthNames: [
                 "Januari", "Februari", "Mac", "April", "Mei", "Jun", 

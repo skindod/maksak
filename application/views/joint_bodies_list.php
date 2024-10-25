@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="kt-subheader__toolbar">
                                     <div class="kt-subheader__wrapper">
-                                        <span class="kt-subheader__desc"><i class="flaticon2-calendar-1"></i> <?php echo date('M j'); ?></span>
+                                        <span class="kt-subheader__desc"><i class="flaticon2-calendar-1"></i> <?php echo $malayMonths[$month] . ' ' . $day; ?></span>
                                     </div>
                                 </div>
                             </div>

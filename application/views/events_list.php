@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="kt-subheader__toolbar">
                                     <div class="kt-subheader__wrapper">
-                                        <span class="kt-subheader__desc"><i class="flaticon2-calendar-1"></i> <?php echo date('M j'); ?></span>
+                                        <span class="kt-subheader__desc"><i class="flaticon2-calendar-1"></i> <?php echo $malayMonths[$month] . ' ' . $day; ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -68,9 +68,9 @@
                                                                     </a>
                                                                     <div class="kt-widget__action">
                                                                         <?php if($_SESSION['role'] == 0){ ?>
-                                                                            <button type="button" class="btn btn-secondary btn-sm btn-upper" onclick="openModal()">ubah tarikh tutup pendaftaran</button>&nbsp;
+                                                                            <button type="button" class="btn btn-secondary btn-sm btn-upper" onclick="openModal(<?php echo $event->id; ?>)">ubah tarikh tutup pendaftaran</button>&nbsp;
                                                                             <!-- Modal -->
-                                                                            <div class="modal fade" id="dateTimeModal" tabindex="-1" role="dialog" aria-labelledby="dateTimeModalLabel" aria-hidden="true">
+                                                                            <div class="modal fade" id="dateTimeModal<?php echo $event->id; ?>" tabindex="-1" role="dialog" aria-labelledby="dateTimeModalLabel" aria-hidden="true">
                                                                                 <div class="modal-dialog" role="document">
                                                                                     <div class="modal-content">
                                                                                         <?php $attributes = array("id" => "changedateform", "name" => "changedateform");
@@ -271,8 +271,8 @@
         location.replace("/events?year="+year);
     }
 
-    function openModal() {
-        $('#dateTimeModal').modal('show');
+    function openModal(eventid) {
+        $('#dateTimeModal'+eventid).modal('show');
     }
 </script>
 

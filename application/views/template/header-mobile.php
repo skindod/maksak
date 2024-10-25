@@ -2,8 +2,8 @@
 <!-- begin:: Header Mobile -->
 <div id="kt_header_mobile" class="kt-header-mobile  kt-header-mobile--fixed ">
     <div class="kt-header-mobile__logo">
-        <a href="demo10/index.html">
-            <img alt="Logo" src="<?php echo base_url(); ?>asset/assets/media/logos/logo-10-sm.png" />
+        <a href="<?php echo base_url('dashboard/index'); ?>">
+            <img alt="Logo" style="width: 25%" src="<?php echo base_url(); ?>asset/assets/media/logos/logo-maksak-bak.png" />
         </a>
     </div>
     <div class="kt-header-mobile__toolbar">
