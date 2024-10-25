@@ -151,8 +151,8 @@
                                                                     </div>
                                                                     <div class="col-xl-6">
                                                                         <div class="form-group">
-                                                                            <label>URL google map</label>
-                                                                            <input type="text" class="form-control" name="url_map" placeholder="URL">
+                                                                            <label>Pautan Google Map</label>
+                                                                            <input type="text" class="form-control" name="url_map" placeholder="Pautan Google Map">
                                                                             <span class="form-text text-muted">Jika ada</span>
                                                                         </div>
                                                                     </div>
@@ -234,8 +234,8 @@
                                                                                         </div>
                                                                                         <div class="kt-form__control">
                                                                                             <select name="acara_kategori" class="form-control" required="">
-                                                                                                <option value="single">Single</option>
-                                                                                                <option value="team">Team</option>
+                                                                                                <option value="single">Individu</option>
+                                                                                                <option value="team">Berpasukan</option>
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>

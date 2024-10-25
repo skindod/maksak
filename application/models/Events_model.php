@@ -669,25 +669,52 @@ class events_model extends CI_Model {
         $return = array();
         $return[] = array('Bulan', 'Pemain');
 
-        for($month = 1; $month < 13; $month++){
-            $month2 = sprintf("%02d", $month);
-	    $totalDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        // Malay month names
+        $malayMonths = array(
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Mac',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Jun',
+            '07' => 'Julai',
+            '08' => 'Ogos',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Disember'
+        );
 
-            $this->db->select('register.*');
-            $this->db->from('events');
-            $this->db->join('events_location','events_location.event_id = events.id');
-            $this->db->join('register','register.event_id = events.id');
-            $this->db->where('events_location.date_from >=', $year.'-'.$month2.'-01 00:00:00');
-            $this->db->where('events_location.date_from <=', $year.'-'.$month2.'-'.$totalDays.' 23:59:59');
-            $query = $this->db->get();
-            $num = $query->num_rows();
+        // Query all events within the specified year
+        $startOfYear = "$year-01-01 00:00:00";
+        $endOfYear = "$year-12-31 23:59:59";
 
-            $time = strtotime($month2.'/1/2003');
-            $monthText = date('F',$time);
-
-            $return[] = array($monthText, $num);
-        }
+        $this->db->select('register.*, MONTH(events_location.date_from) as month');
+        $this->db->from('events');
+        $this->db->join('events_location', 'events_location.event_id = events.id');
+        $this->db->join('register', 'register.event_id = events.id');
+        $this->db->where('events_location.date_from >=', $startOfYear);
+        $this->db->where('events_location.date_from <=', $endOfYear);
+        $query = $this->db->get();
         
+        $data = $query->result();
+
+        // Initialize an array to hold the count of events per month
+        $monthlyCounts = array_fill(1, 12, 0);
+
+        // Aggregate events by month
+        foreach ($data as $row) {
+            $month = $row->month;  // Get the month (1-12)
+            $monthlyCounts[$month]++;
+        }
+
+        // Build the result array with month names in Malay
+        foreach ($monthlyCounts as $month => $count) {
+            $monthKey = sprintf("%02d", $month);  // Format month as "01", "02", etc.
+            $monthName = $malayMonths[$monthKey];
+            $return[] = array($monthName, $count);
+        }
+
         return $return;
     }
 

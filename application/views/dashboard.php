@@ -1,6 +1,6 @@
 <?php include "template/header.php"; ?>
 
-<title>MAKSAK | Dashboard</title><!-- comment -->
+<title>MAKSAK | Laman Utama</title><!-- comment -->
 
 <?php include "template/import-css.php"; ?>
 <script type = "text/javascript" src = "https://www.gstatic.com/charts/loader.js"></script>
@@ -31,7 +31,7 @@
                             <!-- begin:: Content Head -->
                             <div class="kt-subheader   kt-grid__item" id="kt_subheader">
                                 <div class="kt-subheader__main">
-                                    <h3 class="kt-subheader__title">Dashboard</h3>
+                                    <h3 class="kt-subheader__title">Laman Utama</h3>
                                     <span class="kt-subheader__separator kt-subheader__separator--v"></span>
                                     <span class="kt-subheader__desc">Data tahun</span>
                                     <select id="selectYear" onchange="changeYear()">
@@ -215,8 +215,10 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <h5 class="modal-title" id="eventModalLabel">Butiran Kejohanan</h5>
+                            <button type="button" class="btn-sm btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="fa fa-times"></i>
+                            </button>
                         </div>
                         <div class="modal-body" id="eventModalBody">
                             <!-- Event details will be displayed here -->
@@ -235,7 +237,32 @@
 <script language = "JavaScript">
     $(document).ready(function() {
         $('#calendar').fullCalendar({
+            locale: 'ms',
             initialView: 'dayGridMonth',
+            firstDay: 0,  // Start the week on Monday
+            dayNames: ["Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu", "Ahad"],
+            dayNamesShort: ["Isn", "Sel", "Rab", "Khms", "Jum", "Sab", "Ahd"],
+            // Manually set month names in Malay
+            monthNames: [
+                "Januari", "Februari", "Mac", "April", "Mei", "Jun", 
+                "Julai", "Ogos", "September", "Oktober", "November", "Disember"
+            ],
+            monthNamesShort: [
+                "Jan", "Feb", "Mac", "Apr", "Mei", "Jun", 
+                "Jul", "Ogos", "Sep", "Okt", "Nov", "Dis"
+            ],
+            buttonText: {
+                today: 'Hari Ini',  // Custom text for the "Today" button
+                month: 'Bulan',     // Custom text for month view button if applicable
+                week: 'Minggu',     // Custom text for week view button if applicable
+                day: 'Hari'         // Custom text for day view button if applicable
+            },
+            
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',  // The month title is displayed here
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
             // other options...
             events: [
             <?php if(!empty($calendar_data)){ ?>
